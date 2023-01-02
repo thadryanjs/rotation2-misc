@@ -1,0 +1,66 @@
+
+```{julia}
+
+using Random
+using Distributions
+using Plots
+using LaTeXStrings
+```
+
+```{julia}
+
+Random.seed!(8675309)
+
+log_normal = LogNormal(0.0, 1.0)
+
+xi = rand(log_normal, 1000)
+```
+
+```{julia}
+
+histogram(xi, label = L"$x_i$")
+```
+
+```{julia}
+
+function generate_dataset(; n::Int64 = 10, mu::Number = 2,
+    sd::Number = 0.5, draws::Int = 1000)         
+    
+    log_normal = LogNormal(mu, sd)
+    
+    results_vec = Vector{Number}[]
+
+    for i in 1:n
+        x_i = rand(log_normal, draws)
+        push!(results_vec, x_i)
+    end
+
+    results_vec
+
+end
+
+samples = generate_dataset(n = 3);
+```
+
+
+```{julia}
+
+function algorithmI(; samples::Vector{Vector{Number}},
+    boot_num::Int = 100, draws_per_boot::Int = 10)
+
+    for s in samples
+        theta = mean(s)
+        println("theta: ", theta)
+        theta_boots = Number[]
+        for b in 1:boot_num
+            theta_boot = mean(rand(s, draws_per_boot))
+            push!(theta_boots, theta_boot)
+        end
+        println(theta_boots)
+    end
+
+end
+
+
+algorithmI(; samples, boot_num = 10)
+```
