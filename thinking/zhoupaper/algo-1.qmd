@@ -4,103 +4,85 @@
 using Random
 using Distributions
 using Plots
-using LaTeXStrings
+# using LaTeXStrings
 ```
 
 ```{julia}
 
 Random.seed!(8675309)
 
-log_normal = LogNormal(0.0, 1.0)
+mu = 2
+sd = 0.5
 
-xi = rand(log_normal, 1000)
+normal_dist = Normal(mu, sd)
 ```
 
 ```{julia}
 
-histogram(xi, label = L"$x_i$")
-```
-
-```{julia}
-
-function generate_dataset(; n::Int64 = 10, mu::Number = 2,
-    sd::Number = 0.5, draws::Int64 = 1000)         
+function generate_dataset(dist; n::Int64 = 10, draws::Int64 = 1000)         
     
-    log_normal = LogNormal(mu, sd)
     results_vec = Array{Number}[]
+    
     for i in 1:n
-        x_i = rand(log_normal, draws)
+        x_i = rand(dist, draws)
         push!(results_vec, x_i)
     end
+
     results_vec
 
 end
 
-samples = generate_dataset(n = 3);
+norm_samples = generate_dataset(normal_dist, n = 3);
 ```
+
+We inspect one of the samples to make sure we're getting what we thing we are:
+
+```{julia}
+histogram(norm_samples[1])
+```
+
+We now want to apply the transformation to make them log-normal.
+
+$$
+X \sim Normal(\mu, \sigma)
+$$
+
+...then,
+
+$$
+exp(X) \sim LogNormal(\mu,\sigma)
+$$
 
 
 ```{julia}
 
-function bootstrap_thetas(samples::Array{Array{Number}};
-    boot_num::Int = 100, draws_per_boot::Int = 10)
 
-    # first, get a list of the means and bootstrap means
-    thetas = Number[]
-    theta_boots_lists = Array{Number}[]
-
-    for s in samples
-        # get the sample mean
-        theta = mean(s)
-        push!(thetas, theta)
-        # get the bootstrap means
-        theta_boots = Number[]
-        for b in 1:boot_num
-            theta_boot = mean(rand(s, draws_per_boot))
-            push!(theta_boots, theta_boot)
-        end
-        push!(theta_boots_lists, theta_boots)
-    end
-
-    thetas, theta_boots_lists
+function exp_vector(vec)
+    [exp(i) for i in vec]
 end
 
-results = bootstrap_thetas(samples, boot_num = 5)
+samples = [exp_vector(sample) for sample in norm_samples]
+
+histogram(samples[1])
 ```
 
-```{julia}
-
-thetas = results[1]
-theta_boots = results[2]
-
-function root_statistic(thetas::Array{Number}, theta_boots::Array{Array{Number}})
-    for i in 1:length(thetas)
-        theta = thetas[i]
-        println(theta)
-        for j in 1:length(theta_boots[i])
-            x = (theta - theta_boots[i][j])
-            println("\t", stat)
-        end
-    end
-end
-
-println(length(theta_boots[1]))
-root_statistic(thetas, theta_boots)
-```
+We can see we've transformed it. The first step in the algorithm calls for calculating $\theta$ s for each of our samples:
 
 
 ```{julia}
 
 
-function get_thetas(samples::Array{Array{Number}})
-    
-    output_array = Number[]
+function get_thetas(samples::Vector{Vector{Float64}})
 
-    for s in samples
-        push!(output_array, mean(s))
+    output = Dict()
+
+    for i in 1:length(samples)
+        s = samples[i]
+        sample_name = string(sample, i)
+        output[sample_name] = (mean(s), std(s))
     end
 
-    output_array
+    output
 
 end
 
@@ -109,21 +91,50 @@ thetas = get_thetas(samples)
 
 ```{julia}
 
-function get_theta_boots(thetas::Array{Number}; k::Int64 = 10)
+function get_theta_boots(thetas)
 
-    theta_boots = Number[]
+    output = Dict()
 
-    for t in thetas
-        # will need to get a sd no?
-        dist_boot = LogNormal(t, 0)
-        bootstrap_sample = rand(log_normal, 1000)
-        push!(theta_boots, mean(bootstrap_sample))
+    for (k, v) in thetas
+        dist_boot = Normal(v[1], v[2])
+        sample_boot = rand(dist_boot, 1000)
+        output[k] = (mean(sample_boot), std(sample_boot))
     end
 
-    theta_boots
+    output
+end
+
+theta_boots = get_theta_boots(thetas)
+```
+
+We note these look similar but not identical to the observed values we saw. We can now do the required comparisons.
+
+```{julia}
+
+function calcR(t, tb, t_hat, tb_hat, j, jp)
+    println("Compare ", j, " to ", jp)
+end
+
+# a list of the sample names in order
+sample_names = [string("sample", i) for i in 1:length(samples)]
+
+# for every sample...
+for j in sample_names
+    
+    t = thetas[j][1]
+    tb = theta_boots[j][1]
+
+    # ...for every OTHER sample (not itself)
+    for jp in sample_names
+        if j != jp
+            t_hat = thetas[jp][1]
+            tb_hat = theta_boots[jp][1]
+            calcR(t, tb, t_hat, tb_hat, j, jp)
+        end
+    end
 
 end
 
-get_theta_boots(thetas)
 ```
+
 
