@@ -13,8 +13,8 @@ Random.seed!(8675309)
 n_samples = 2
 mu = 2
 sd = 0.5
-N = 1000
-n_bins = 10 
+N = 10000
+n_bins = 100
 bin_size = Int(N/n_bins)
 normal_dist = Normal(mu, sd)
 ```
@@ -160,13 +160,13 @@ Create two new samples, this time give one a different mean but a similar standa
 
 ```{julia}
 new_samples = [
-    rand(Normal(mu, sd), 1000),
+    rand(Normal(mu, sd), N),
     # introduce a mean that is higher
-    rand(Normal(4, sd), 1000)
+    rand(Normal(4, sd), N)
 ]
 
-sample3 = get_sample_info(new_samples[1], "sample3", n_bins = 10)
-sample4 = get_sample_info(new_samples[2], "sample4", n_bins = 10)
+sample3 = get_sample_info(new_samples[1], "sample3", n_bins = n_bins)
+sample4 = get_sample_info(new_samples[2], "sample4", n_bins = n_bins)
 ```
 
 ### Method 1
