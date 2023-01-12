@@ -127,6 +127,7 @@ function calcR(t, tb, sd, t_hat, tb_hat, sd_hat, j, jp)
 end
 ```
 
+## Under the null
 
 ```{julia}
 
@@ -172,7 +173,7 @@ sample3 = get_sample_info(new_samples[1], "sample3", n_bins = 10)
 sample4 = get_sample_info(new_samples[2], "sample4", n_bins = 10)
 ```
 
-
+## Under the alternative
 
 ```{julia}
 
@@ -184,8 +185,6 @@ sd2 = sample4["sd"]
 
 m1boots = sample3["bootstrap_means"]
 m2boots = sample4["bootstrap_means"]
-
-
 
 r_stats = []
 
