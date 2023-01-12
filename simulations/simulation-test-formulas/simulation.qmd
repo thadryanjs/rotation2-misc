@@ -11,7 +11,7 @@ using Plots
 
 Random.seed!(8675309)
 
-n_samples = 3
+n_samples = 2
 mu = 2
 sd = 0.5
 N = 1000
@@ -74,95 +74,185 @@ We can see we've transformed it. The first step in the algorithm calls for calcu
 ```{julia}
 
 
-function get_thetas(samples::Vector{Vector{Float64}})
+function get_sample_info(sample, sample_name; n_bins)    
 
-    output = Dict()
+    theta_boots = []
 
-    for i in 1:length(samples)
-        s = samples[i]
-        sample_name = string(sample, i)
-        output[sample_name] = (mean(s), std(s))
+    j = 1
+    for x in 1:n_bins
+        k = j  + (bin_size-1)
+        # println("from ", j, " to ", k)
+        push!(theta_boots, mean(sample[j:k]))
+        j += bin_size
     end
 
+    output = Dict()
+    
+    output["name"] = sample_name
+    output["mean"] = mean(sample)
+    output["sd"] = std(sample)
+    output["bootstrap_means"] = theta_boots
+    
     output
 
 end
 
-thetas = get_thetas(samples)
+sample1 = get_sample_info(samples[1], "sample1", n_bins = n_bins)
 ```
 
+Now we have a dictionary containing the information about a samples we need to compare it to another.
 
 ```{julia}
-
-
-
-j = 1
-for x in 1:n_bins
-    k = j  + (bin_size-1)
-    # println("from ", i, " to ", j)
-    j += bin_size
-end
+sample1
 ```
 
+
+We will get another sample to compare it to.
 
 ```{julia}
-
+sample2 = get_sample_info(samples[2], "sample2", n_bins = n_bins)
 ```
 
-```{julia}
 
-function get_theta_boots(thetas)
-
-    output = Dict()
-
-    for (k, v) in thetas
-        println(k, " is k ", v)
-        # dist_boot = Normal(v[1], v[2])
-        # sample_boot = rand(dist_boot, 1000)
-        # output[k] = (mean(sample_boot), std(sample_boot))
-    end
-
-    output
-end
-
-theta_boots = get_theta_boots(thetas)
-```
-
-We note these look similar but not identical to the observed values we saw. We can now do the required comparisons.
 
 ```{julia}
 
 function calcR(t, tb, sd, t_hat, tb_hat, sd_hat, j, jp)
 
-    println("Compare ", j, " to ", jp)
+    # println("Compare ", j, " to ", jp)
 
     se = sqrt( ((sd^2)/1000) + ((sd_hat^2)/1000) )
-    r = abs((tb - tb_hat) - (t - tb)/se)
-    println(r)    
+    abs((tb - tb_hat) - (t - tb)/se)   
     
 end
+```
 
+
+```{julia}
+
+function calc_root_stat(m1, m1b, sd1, m2, m2b, sd2)
+    
+    se = sqrt( ((sd1)/1000) + ((sd2^2)/1000) )
+    abs( (m1b - m2b) - (m1 - m2)/se )
+end
+
+
+
+m1 = sample1["mean"]
+m2 = sample2["mean"]
+
+sd1 = sample1["sd"]
+sd2 = sample2["sd"]
+
+m1boots = sample1["bootstrap_means"]
+m2boots = sample2["bootstrap_means"]
+
+
+
+r_stats = []
+
+for i in 1:n_bins
+    push!(r_stats, calc_root_stat(m1, m1boots[i], sd1, m2, m2boots[i], sd2))
+end
+
+r_stats
+
+histogram(r_stats)
+```
+
+
+
+```{julia}
+new_samples = [
+    rand(Normal(mu, sd), 1000),
+    rand(Normal(4, sd), 1000)
+]
+
+sample3 = get_sample_info(new_samples[1], "sample3", n_bins = 10)
+sample4 = get_sample_info(new_samples[2], "sample4", n_bins = 10)
+```
+
+
+
+```{julia}
+
+m1 = sample3["mean"]
+m2 = sample4["mean"]
+
+sd1 = sample3["sd"]
+sd2 = sample4["sd"]
+
+m1boots = sample3["bootstrap_means"]
+m2boots = sample4["bootstrap_means"]
+
+
+
+r_stats = []
+
+for i in 1:n_bins
+    push!(r_stats, calc_root_stat(m1, m1boots[i], sd1, m2, m2boots[i], sd2))
+end
+
+r_stats
+
+histogram(r_stats)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{julia}
+
+# for m1b in m1boots
+#     for m2b in m2boots
+#         println(m1b, " ", m2b)
+#     end
+# end
+```
+
+
+```{julia}
 # a list of the sample names in order
-sample_names = [string("sample", i) for i in 1:length(samples)]
+# sample_names = [string("sample", i) for i in 1:length(samples)]
  
-# for every sample...
-for j in sample_names
+# # for every sample...
+# for j in sample_names
     
-    t = thetas[j][1]
-    sd = thetas[j][2]
-    tb = theta_boots[j][1]
+#     t = thetas[j][1]
+#     sd = thetas[j][2]
+#     tb = theta_boots[j][1]
     
-    # ...for every *other* sample (not itself)
-    for jp in sample_names
-        if j != jp
-            t_hat = thetas[jp][1]
-            sd_hat = thetas[jp][2]
-            tb_hat = theta_boots[jp][1]
-            calcR(t, tb, sd, t_hat, tb_hat, sd_hat, j, jp)
-        end
-    end
+#     # ...for every *other* sample (not itself)
+#     for jp in sample_names
+#         if j != jp
+#             t_hat = thetas[jp][1]
+#             sd_hat = thetas[jp][2]
+#             tb_hat = theta_boots[jp][1]
+#             calcR(t, tb, sd, t_hat, tb_hat, sd_hat, j, jp)
+#         end
+#     end
 
-end
+# end
 
 ```
 
@@ -202,44 +292,44 @@ end
 
 # end
 
-function algorithmI(reps)
+# function algorithmI(reps)
 
-    generate_dataset(normal_dist, n = 3)
+#     generate_dataset(normal_dist, n = 3)
 
-    samples = [exp_vector(sample) for sample in generate_dataset(normal_dist, n = 3)]
+#     samples = [exp_vector(sample) for sample in generate_dataset(normal_dist, n = 3)]
 
-    thetas = get_thetas(samples)
+#     thetas = get_thetas(samples)
 
-    for rep_num in 1:reps
+#     for rep_num in 1:reps
 
-        println("rep: ", rep_num)
+#         println("rep: ", rep_num)
 
-        theta_boots = get_theta_boots(thetas)
+#         theta_boots = get_theta_boots(thetas)
 
-        # a list of the sample names in order
-        sample_names = [string("sample", i) for i in 1:length(samples)]
+#         # a list of the sample names in order
+#         sample_names = [string("sample", i) for i in 1:length(samples)]
         
-        # for every sample...
-        for j in sample_names
+#         # for every sample...
+#         for j in sample_names
             
-            t = thetas[j][1]
-            sd = thetas[j][2]
-            tb = theta_boots[j][1]
+#             t = thetas[j][1]
+#             sd = thetas[j][2]
+#             tb = theta_boots[j][1]
             
-            # ...for every *other* sample (not itself)
-            for jp in sample_names
-                if j != jp
-                    t_hat = thetas[jp][1]
-                    sd_hat = thetas[jp][2]
-                    tb_hat = theta_boots[jp][1]
-                    calcR(t, tb, sd, t_hat, tb_hat, sd_hat, j, jp)
-                end
-            end
+#             # ...for every *other* sample (not itself)
+#             for jp in sample_names
+#                 if j != jp
+#                     t_hat = thetas[jp][1]
+#                     sd_hat = thetas[jp][2]
+#                     tb_hat = theta_boots[jp][1]
+#                     calcR(t, tb, sd, t_hat, tb_hat, sd_hat, j, jp)
+#                 end
+#             end
 
-        end    
-    end
+#         end    
+#     end
 
-end
+# end
 
-algorithmI(4)
+# algorithmI(4)
 ```
