@@ -118,18 +118,18 @@ function calc_root_stat1(m1, m1b, sd1, m2, m2b, sd2, N)
     abs( (m1b - m2b) - (m1 - m2)/se )
 end
 
-# function calc_root_stat2(m1, m1b, sd1, m2, m2b, sd2, M)
-#     # M^1    
-#     se = sqrt( ((sd1)/M) + ((sd2^2)/M) )
-#     abs( (m1b - m2b) - (m1 - m2)/se )
-# end
+function calc_root_stat2(m1, m1b, sd1, m2, m2b, sd2, M)
+    # M^1    
+    se = sqrt( ((sd1)/M) + ((sd2^2)/M) )
+    abs( (m1b - m2b) - (m1 - m2)/se )
+end
 
 
-# function calc_root_stat3(m1, m1b, sd1, m2, m2b, sd2, M, K)
+function calc_root_stat3(m1, m1b, sd1, m2, m2b, sd2, M, K)
     
-#     se = sqrt( (((sd1)) + ((sd2^2))) * (M*K))
-#     abs( (m1b - m2b) - (m1 - m2)/se )
-# end
+    se = sqrt( (((sd1)) + ((sd2^2))) * (M*K))
+    abs( (m1b - m2b) - (m1 - m2)/se )
+end
 
 
 m1 = sample1["mean"]
@@ -169,6 +169,8 @@ sample3 = get_sample_info(new_samples[1], "sample3", n_bins = 10)
 sample4 = get_sample_info(new_samples[2], "sample4", n_bins = 10)
 ```
 
+### Method 1
+
 ```{julia}
 
 m1 = sample3["mean"]
@@ -179,6 +181,9 @@ sd2 = sample4["sd"]
 
 m1boots = sample3["bootstrap_means"]
 m2boots = sample4["bootstrap_means"]
+```
+
+```{julia}
 
 r_stats = []
 
@@ -191,13 +196,38 @@ r_stats
 histogram(r_stats)
 ```
 
-
 ```{julia}
 
 
 d = quantile(r_stats, 1-0.05)
 
-se = sqrt( ((sd1^2)/1000) + ((sd2^2)/1000) )
+se = sqrt( ((sd1^2)/N) + ((sd2^2)/N) )
+
+println("low ", (m1 - m2) - d*se )
+println("observed ", (m1 - m2))
+println("high ", (m1 - m2) + d*se )
+```
+
+### Method 2
+
+```{julia}
+
+r_stats = []
+
+for i in 1:n_bins
+    push!(r_stats, calc_root_stat2(m1, m1boots[i], sd1, m2, m2boots[i], sd2, n_bins))
+end
+
+r_stats
+
+histogram(r_stats)
+```
+
+```{julia}
+
+d = quantile(r_stats, 1-0.05)
+
+se = sqrt( ((sd1^2)/N) + ((sd2^2)/N) )
 
 println("low ", (m1 - m2) - d*se )
 println("observed ", (m1 - m2))
@@ -206,17 +236,29 @@ println("high ", (m1 - m2) + d*se )
 
 
 
-
-
-
-
-
-
-
-
-
-
+## Method 3
 
 ```{julia}
 
+r_stats = []
+
+for i in 1:n_bins
+    push!(r_stats, calc_root_stat3(m1, m1boots[i], sd1,
+                                    m2, m2boots[i], sd2, n_bins, N))
+end
+
+r_stats
+
+histogram(r_stats)
+```
+
+```{julia}
+
+d = quantile(r_stats, 1-0.05)
+
+se = sqrt( ((sd1^2)/N) + ((sd2^2)/N) )
+
+println("low ", (m1 - m2) - d*se )
+println("observed ", (m1 - m2))
+println("high ", (m1 - m2) + d*se )
 ```
