@@ -11,31 +11,32 @@ using Plots
 
 Random.seed!(8675309)
 
+n_samples = 3
 mu = 2
 sd = 0.5
-
+N = 1000
+n_bins = 10 
+bin_size = Int(N/n_bins)
 normal_dist = Normal(mu, sd)
 ```
 
+
 ```{julia}
 
-function generate_dataset(dist; n::Int64 = 10, draws::Int64 = 1000)         
-    
-    results_vec = Array{Number}[]
-    
-    for i in 1:n
-        x_i = rand(dist, draws)
-        push!(results_vec, x_i)
-    end
+norm_samples = Vector{Number}[]
 
-    results_vec
-
+for i in 1:n_samples
+    push!(norm_samples, rand(normal_dist, N))
 end
 
-norm_samples = generate_dataset(normal_dist, n = 3);
+# inspect
+for i in norm_samples
+    println(i[1:5], "\n")
+end
 ```
 
-We inspect one of the samples to make sure we're getting what we thing we are:
+
+We inspect the dataset to make sure we're getting what we think we are:
 
 ```{julia}
 histogram(norm_samples[1])
@@ -56,17 +57,18 @@ $$
 
 ```{julia}
 
-
-function exp_vector(vec)
-    [exp(i) for i in vec]
-end
+exp_vector(vec) = [exp(i) for i in vec]
 
 samples = [exp_vector(sample) for sample in norm_samples]
 
 histogram(samples[1])
 ```
 
+
 We can see we've transformed it. The first step in the algorithm calls for calculating $\theta$ s for each of our samples:
+
+
+
 
 
 ```{julia}
@@ -89,6 +91,24 @@ end
 thetas = get_thetas(samples)
 ```
 
+
+```{julia}
+
+
+
+j = 1
+for x in 1:n_bins
+    k = j  + (bin_size-1)
+    # println("from ", i, " to ", j)
+    j += bin_size
+end
+```
+
+
+```{julia}
+
+```
+
 ```{julia}
 
 function get_theta_boots(thetas)
@@ -96,9 +116,10 @@ function get_theta_boots(thetas)
     output = Dict()
 
     for (k, v) in thetas
-        dist_boot = Normal(v[1], v[2])
-        sample_boot = rand(dist_boot, 1000)
-        output[k] = (mean(sample_boot), std(sample_boot))
+        println(k, " is k ", v)
+        # dist_boot = Normal(v[1], v[2])
+        # sample_boot = rand(dist_boot, 1000)
+        # output[k] = (mean(sample_boot), std(sample_boot))
     end
 
     output
@@ -222,30 +243,3 @@ end
 
 algorithmI(4)
 ```
-
-
-
-\begin{algorithm}
-\caption{Put your caption here}
-\begin{algorithmic}[1]
-
-\Procedure{Roy}{$a,b$}       \Comment{This is a test}
-    \State System Initialization
-    \State Read the value 
-    \If{$condition = True$}
-        \State Do this
-        \If{$Condition \geq 1$}
-        \State Do that
-        \ElsIf{$Condition \neq 5$}
-        \State Do another
-        \State Do that as well
-        \Else
-        \State Do otherwise
-        \EndIf
-    \EndIf
-
-    \While{$something \not= 0$}  \Comment{put some comments here}
-        \State $var1 \leftarrow var2$  \Comment{another comment}
-        \State $var3 \leftarrow var4$
-    \EndWhile  \label{roy's loop}
-\EndProcedure
