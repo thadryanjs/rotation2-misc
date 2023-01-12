@@ -203,9 +203,9 @@ d = quantile(r_stats, 1-0.05)
 
 se = sqrt( ((sd1^2)/N) + ((sd2^2)/N) )
 
-println("low ", (m1 - m2) - d*se )
+println("low ", (m1 - m2) - (d*se) )
 println("observed ", (m1 - m2))
-println("high ", (m1 - m2) + d*se )
+println("high ", (m1 - m2) + (d*se) )
 ```
 
 ### Method 2
@@ -227,13 +227,12 @@ histogram(r_stats)
 
 d = quantile(r_stats, 1-0.05)
 
-se = sqrt( ((sd1^2)/N) + ((sd2^2)/N) )
+se = sqrt( ((sd1^2)/n_bins) + ((sd2^2)/n_bins) )
 
-println("low ", (m1 - m2) - d*se )
+println("low ", (m1 - m2) - (d*se) )
 println("observed ", (m1 - m2))
-println("high ", (m1 - m2) + d*se )
+println("high ", (m1 - m2) + (d*se) )
 ```
-
 
 
 ## Method 3
@@ -256,9 +255,9 @@ histogram(r_stats)
 
 d = quantile(r_stats, 1-0.05)
 
-se = sqrt( ((sd1^2)/N) + ((sd2^2)/N) )
+se = sqrt( ((sd1^2)) + ((sd2^2)) * (n_bins * N) )
 
-println("low ", (m1 - m2) - d*se )
+println("low ", (m1 - m2) - (d*se) )
 println("observed ", (m1 - m2))
-println("high ", (m1 - m2) + d*se )
+println("high ", (m1 - m2) + (d*se) )
 ```
