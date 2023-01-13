@@ -8,45 +8,65 @@ using Plots
 
 ## Definitions
 
- - $N$: numbers of observations per sample.
- - $K$: number batches (can be thought of as number of bootstraps).
- - $n_k$: number of observations per batch ($\frac{N}{K}$).
- - $M$: mean of a sample.
- - $M^{b}$: mean of a batch (bootstrap).
- - $\sigma$: Standard deviation of sample.
- - $\sigma_b$: standard deviation of a batch.
- - $R$: root statistic comparing two means (an empirical mean to a bootstrap).
- - $S$: standard error of a sample ("Outer SE").
- - $S_b$: standard error use in the calculation of $R$ ("Inner SE").
- - $\alpha$: significance level of a comparison.
- - $d$: $1-\alpha$ quantile of a vector of $R$s.
+ - $N$:= numbers of observations per sample.
+ - $K$:= number batches (can be thought of as number of bootstraps).
+ - $M$:= number of observations per batch ($\frac{N}{K}$).
+ - $\theta$:= mean of a sample.
+ - $\theta^{b}$:= mean of a batch (bootstrap).
+ - $\sigma$:= standard deviation of sample.
+ - $\sigma_b$:= standard deviation of a batch.
+ - $R$:= root statistic comparing two means (an empirical mean to a bootstrap).
+ - $S$:= standard error of a sample ("Outer SE").
+ - $S_b$:= standard error use in the calculation of $R$ ("Inner SE").
+ - $\alpha$:= significance level of a comparison.
+ - $d$:= $1-\alpha$ quantile of a vector of $R$s.
+ - $Z$:= $\in [N,M,K]$, factor to test the use of in the function.
 
-```{julia}
-
-```
 
 ```{julia}
 
 Random.seed!(8675309)
 
-n_samples = 2
-mu = 2
-sd = 0.5
 N = 10000
 K = 100
-n_k = Int(N/K)
-normal_dist = Normal(mu, sd)
+M = Int(N/K)
 ```
+
+The log-normal distribution:
 
 $$
 X \sim Normal(\mu, \sigma)
 $$
 
-...then,
-
+Then:
 $$
 exp(X) \sim LogNormal(\mu,\sigma)
 $$
+
+## Mathematical Functions
+
+These are the functions we're using for math calculations (as opposed to the programmatic, automation/simulation functions).
+
+### Computing $R$
+
+```{julia}
+
+### Compute the R statistic. Z is the constant used for the division (M, N, K)
+function calc_root_stat(m1, m1b, sd1b, m2, m2b, sd2b, Z)
+    se = sqrt( ((sd1b^2)) + ((sd2b^2) * (Z^-1)) )
+    abs( (m1b - m2b) - (m1 - m2)/se )
+end
+```
+
+### Standard Error $S$
+
+```{julia}
+
+```
+
+### Stander Error for a batch $S_b$
+
+## Simulation Functions
 
 
 ```{julia}
@@ -59,15 +79,16 @@ function generate_sample(mu, sd, N)
 
 end
 
-samples = [generate_sample(2, 0.5, N) for i in 1:4]
+samples = [generate_sample(2, 0.5, N) for i in 1:2]
 
 histogram(samples[1])
 ```
 
-I will now write a separate function to get the information
+I will now write a separate function to get the information about sample needed to make a comparison.
+
 ```{julia}
 
-
+### will conduct batch bootstrapping and collect relevant data on the sample
 function get_batch_info(sample, sample_name, K)    
 
     # arrays to store means and SDs
@@ -82,14 +103,14 @@ function get_batch_info(sample, sample_name, K)
     i = 1
     for x in 1:K
         # the upper limits, ie, 1-100
-        j = i  + (n_k-1)
+        j = i  + (M-1)
         batch = sample[i:j]
         ### (debug) println("from ", i, " to ", j)
         # collect the figures
         push!(theta_boots, mean(batch))
         push!(sd_boots, std(batch))
         # increase by the batch size the set the next limit
-        i += n_k
+        i += M
     end
     
     Dict(
@@ -105,176 +126,61 @@ end
 sample1 = get_batch_info(samples[1], "sample1", K)
 ```
 
-Now we have a dictionary containing the information about a samples we need to compare it to another.
-
-```{julia}
-sample1
-```
-
-We will get another sample to compare it to.
+Now we have a dictionary containing the information about a samples we need to compare it to another. We will get another sample to compare it to.
 
 ```{julia}
 sample2 = get_batch_info(samples[2], "sample2", K)
 ```
 
-## Under the null
-
 ```{julia}
 
-function calc_root_stat1(m1, m1b, sd1, m2, m2b, sd2, N)
-    # K^1
-    se = sqrt( ((sd1^2)/N) + ((sd2^2)/N) )
-    abs( (m1b - m2b) - (m1 - m2)/se )
+### makes comparisons and returns a vector of R statistics
+### z is the N, K, or M we're testing
+function pairwise_comparison(s1, s2, f, Z)
+
+    s1_theta = sample1["mean"]
+    s1_theta_boots = sample1["bootstrap_means"]
+    s1_sd_boots = sample1["bootstrap_sds"]
+
+    s2_theta = sample2["mean"]
+    s2_theta_boots = sample2["bootstrap_means"]
+    s2_sd_boots = sample2["bootstrap_sds"]
+
+    # a vector to collect the R statistics
+    R_stats = []
+
+    # the number of iterations must match the number of batches, K
+    for i in 1:K
+        R = f(
+            s1_theta, s1_theta_boots[i], s1_theta_boots[i],
+            s2_theta, s2_theta_boots[i], s2_theta_boots[i],
+            Z
+        )
+        push!(R_stats, R)
+    end
+
+    R_stats
+
 end
 
-function calc_root_stat2(m1, m1b, sd1, m2, m2b, sd2, M)
-    # M^1    
-    se = sqrt( ((sd1^2)/M) + ((sd2^2)/M) )
-    abs( (m1b - m2b) - (m1 - m2)/se )
-end
+R_stats_N = pairwise_comparison(samples[1], samples[2], calc_root_stat, N)
+R_stats_K = pairwise_comparison(samples[1], samples[2], calc_root_stat, K)
+R_stats_M = pairwise_comparison(samples[1], samples[2], calc_root_stat, M)
 
-
-function calc_root_stat3(m1, m1b, sd1, m2, m2b, sd2, K)
-    
-    se = sqrt( (((sd1^2)) + ((sd2^2))) * (K^-1))
-    abs( (m1b - m2b) - (m1 - m2)/se )
-end
-
-
-m1 = sample1["mean"]
-m2 = sample2["mean"]
-
-sd1 = sample1["sd"]
-sd2 = sample2["sd"]
-
-m1boots = sample1["bootstrap_means"]
-m2boots = sample2["bootstrap_means"]
-
-
-
-r_stats = []
-
-for i in 1:K
-    push!(r_stats, calc_root_stat1(m1, m1boots[i], sd1, m2, m2boots[i], sd2, N))
-end
-
-r_stats
-
-histogram(r_stats)
-```
-
-## Under the alternative
-
-Create two new samples, this time give one a different mean but a similar standard deviation.
-
-```{julia}
-
-new_samples = [
-    rand(Normal(mu, sd), N),
-    # introduce a mean that is higher
-    rand(Normal(4, sd), N)
-]
-
-sample3 = get_batch_info(new_samples[1], "sample3", K)
-sample4 = get_batch_info(new_samples[2], "sample4", K)
-```
-
-### Method 1
-
-```{julia}
-
-m1 = sample3["mean"]
-m2 = sample4["mean"]
-
-sd1 = sample3["sd"]
-sd2 = sample4["sd"]
-
-m1boots = sample3["bootstrap_means"]
-m2boots = sample4["bootstrap_means"];
-```
-
-```{julia}
-
-r_stats = []
-
-for i in 1:K
-    push!(r_stats, calc_root_stat1(m1, m1boots[i], sd1, m2, m2boots[i], sd2, N))
-end
-
-r_stats
-
-histogram(r_stats)
-```
-
-```{julia}
-
-
-d = quantile(r_stats, 1-0.05)
-
-println("d is: ", d)
-
-se = sqrt( ((sd1^2)/N) + ((sd2^2)/N) )
-
-println("low ", (m1 - m2) - (d*se) )
-println("observed ", (m1 - m2))
-println("high ", (m1 - m2) + (d*se) )
-```
-
-### Method 2
-
-```{julia}
-
-r_stats = []
-
-for i in 1:K
-    push!(r_stats, calc_root_stat2(m1, m1boots[i], sd1,
-                                    m2, m2boots[i], sd2, K))
-end
-
-r_stats
-
-histogram(r_stats)
-```
-
-```{julia}
-
-d = quantile(r_stats, 1-0.05)
-
-println("d is: ", d)
-
-se = sqrt( ((sd1^2)/K) + ((sd2^2)/K) )
-
-println("low ", (m1 - m2) - (d*se) )
-println("observed ", (m1 - m2))
-println("high ", (m1 - m2) + (d*se) )
+histogram(Rs)
 ```
 
 
-## Method 3
 
 ```{julia}
 
-r_stats = []
+# d = quantile(r_stats, 1-0.05)
 
-for i in 1:K
-    push!(r_stats, calc_root_stat3(m1, m1boots[i], sd1,
-                                    m2, m2boots[i], sd2, K))
-end
+# println("d is: ", d)
 
-r_stats
+# se = sqrt( (sd1^2) + (sd2^2) * (N^1) )
 
-histogram(r_stats)
-```
-
-```{julia}
-
-d = quantile(r_stats, 1-0.05)
-
-println("d is: ", d)
-
-se = sqrt( ((sd1^2)) + ((sd2^2)) * (K * N) )
-
-println("low ", (m1 - m2) - (d*se) )
-println("observed ", (m1 - m2))
-println("high ", (m1 - m2) + (d*se) )
+# println("low ", (m1 - m2) - (d*se) )
+# println("observed ", (m1 - m2))
+# println("high ", (m1 - m2) + (d*se) )
 ```
