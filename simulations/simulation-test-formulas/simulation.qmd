@@ -159,6 +159,7 @@ histogram(r_stats)
 Create two new samples, this time give one a different mean but a similar standard deviation.
 
 ```{julia}
+
 new_samples = [
     rand(Normal(mu, sd), N),
     # introduce a mean that is higher
@@ -248,7 +249,7 @@ r_stats = []
 
 for i in 1:n_bins
     push!(r_stats, calc_root_stat3(m1, m1boots[i], sd1,
-                                    m2, m2boots[i], sd2, n_bins, N))
+                                    m2, m2boots[i], sd2, n_bins))
 end
 
 r_stats
