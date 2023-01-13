@@ -114,20 +114,20 @@ sample2 = get_sample_info(samples[2], "sample2", n_bins = n_bins)
 
 function calc_root_stat1(m1, m1b, sd1, m2, m2b, sd2, N)
     # K^1
-    se = sqrt( ((sd1)/N) + ((sd2^2)/N) )
+    se = sqrt( ((sd1^2)/N) + ((sd2^2)/N) )
     abs( (m1b - m2b) - (m1 - m2)/se )
 end
 
 function calc_root_stat2(m1, m1b, sd1, m2, m2b, sd2, M)
     # M^1    
-    se = sqrt( ((sd1)/M) + ((sd2^2)/M) )
+    se = sqrt( ((sd1^2)/M) + ((sd2^2)/M) )
     abs( (m1b - m2b) - (m1 - m2)/se )
 end
 
 
-function calc_root_stat3(m1, m1b, sd1, m2, m2b, sd2, M, K)
+function calc_root_stat3(m1, m1b, sd1, m2, m2b, sd2, K)
     
-    se = sqrt( (((sd1)) + ((sd2^2))) * (M*K))
+    se = sqrt( (((sd1^2)) + ((sd2^2))) * (K^-1))
     abs( (m1b - m2b) - (m1 - m2)/se )
 end
 
@@ -180,7 +180,7 @@ sd1 = sample3["sd"]
 sd2 = sample4["sd"]
 
 m1boots = sample3["bootstrap_means"]
-m2boots = sample4["bootstrap_means"]
+m2boots = sample4["bootstrap_means"];
 ```
 
 ```{julia}
@@ -201,6 +201,8 @@ histogram(r_stats)
 
 d = quantile(r_stats, 1-0.05)
 
+println("d is: ", d)
+
 se = sqrt( ((sd1^2)/N) + ((sd2^2)/N) )
 
 println("low ", (m1 - m2) - (d*se) )
@@ -215,7 +217,8 @@ println("high ", (m1 - m2) + (d*se) )
 r_stats = []
 
 for i in 1:n_bins
-    push!(r_stats, calc_root_stat2(m1, m1boots[i], sd1, m2, m2boots[i], sd2, n_bins))
+    push!(r_stats, calc_root_stat2(m1, m1boots[i], sd1,
+                                    m2, m2boots[i], sd2, n_bins))
 end
 
 r_stats
@@ -226,6 +229,8 @@ histogram(r_stats)
 ```{julia}
 
 d = quantile(r_stats, 1-0.05)
+
+println("d is: ", d)
 
 se = sqrt( ((sd1^2)/n_bins) + ((sd2^2)/n_bins) )
 
@@ -254,6 +259,8 @@ histogram(r_stats)
 ```{julia}
 
 d = quantile(r_stats, 1-0.05)
+
+println("d is: ", d)
 
 se = sqrt( ((sd1^2)) + ((sd2^2)) * (n_bins * N) )
 
