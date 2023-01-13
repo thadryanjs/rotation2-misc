@@ -6,6 +6,25 @@ using Distributions
 using Plots
 ```
 
+## Definitions
+
+ - $N$: numbers of observations per sample.
+ - $K$: number batches (can be thought of as number of bootstraps).
+ - $n_k$: number of observations per batch ($\frac{N}{K}$).
+ - $M$: mean of a sample.
+ - $M^{b}$: mean of a batch (bootstrap).
+ - $\sigma$: Standard deviation of sample.
+ - $\sigma_b$: standard deviation of a batch.
+ - $R$: root statistic comparing two means (an empirical mean to a bootstrap).
+ - $S$: standard error of a sample ("Outer SE").
+ - $S_b$: standard error use in the calculation of $R$ ("Inner SE").
+ - $\alpha$: significance level of a comparison.
+ - $d$: $1-\alpha$ quantile of a vector of $R$s.
+
+```{julia}
+
+```
+
 ```{julia}
 
 Random.seed!(8675309)
@@ -14,34 +33,10 @@ n_samples = 2
 mu = 2
 sd = 0.5
 N = 10000
-n_bins = 100
-bin_size = Int(N/n_bins)
+K = 100
+n_k = Int(N/K)
 normal_dist = Normal(mu, sd)
 ```
-
-
-```{julia}
-
-norm_samples = Vector{Number}[]
-
-for i in 1:n_samples
-    push!(norm_samples, rand(normal_dist, N))
-end
-
-# inspect
-for i in norm_samples
-    println(i[1:5], "\n")
-end
-```
-
-
-We inspect the dataset to make sure we're getting what we think we are:
-
-```{julia}
-histogram(norm_samples[1])
-```
-
-We now want to apply the transformation to make them log-normal.
 
 $$
 X \sim Normal(\mu, \sigma)
@@ -56,44 +51,58 @@ $$
 
 ```{julia}
 
-exp_vector(vec) = [exp(i) for i in vec]
+function generate_sample(mu, sd, N)
 
-samples = [exp_vector(sample) for sample in norm_samples]
+    exp_vector(vec) = [exp(i) for i in vec]
+
+    exp_vector(rand(Normal(mu, sd), N))
+
+end
+
+samples = [generate_sample(2, 0.5, N) for i in 1:4]
 
 histogram(samples[1])
 ```
 
-
-We can see we've transformed it. The first step in the algorithm calls for calculating $\theta$ s for each of our samples:
-
-
+I will now write a separate function to get the information
 ```{julia}
 
 
-function get_sample_info(sample, sample_name; n_bins)    
+function get_batch_info(sample, sample_name, K)    
 
+    # arrays to store means and SDs
     theta_boots = []
+    sd_boots = []
 
-    j = 1
-    for x in 1:n_bins
-        k = j  + (bin_size-1)
-        # println("from ", j, " to ", k)
-        push!(theta_boots, mean(sample[j:k]))
-        j += bin_size
+    # this algorithm indexes arrays at...
+    # 1-100
+    # 101-200
+    # 201-300
+    # etc
+    i = 1
+    for x in 1:K
+        # the upper limits, ie, 1-100
+        j = i  + (n_k-1)
+        batch = sample[i:j]
+        ### (debug) println("from ", i, " to ", j)
+        # collect the figures
+        push!(theta_boots, mean(batch))
+        push!(sd_boots, std(batch))
+        # increase by the batch size the set the next limit
+        i += n_k
     end
-
-    output = Dict()
     
-    output["name"] = sample_name
-    output["mean"] = mean(sample)
-    output["sd"] = std(sample)
-    output["bootstrap_means"] = theta_boots
-    
-    output
+    Dict(
+        "name" => sample_name,
+        "mean" => mean(sample),
+        "sd" => std(sample),
+        "bootstrap_means" => theta_boots,
+        "bootstrap_sds" => sd_boots
+    )
 
 end
 
-sample1 = get_sample_info(samples[1], "sample1", n_bins = n_bins)
+sample1 = get_batch_info(samples[1], "sample1", K)
 ```
 
 Now we have a dictionary containing the information about a samples we need to compare it to another.
@@ -105,7 +114,7 @@ sample1
 We will get another sample to compare it to.
 
 ```{julia}
-sample2 = get_sample_info(samples[2], "sample2", n_bins = n_bins)
+sample2 = get_batch_info(samples[2], "sample2", K)
 ```
 
 ## Under the null
@@ -145,7 +154,7 @@ m2boots = sample2["bootstrap_means"]
 
 r_stats = []
 
-for i in 1:n_bins
+for i in 1:K
     push!(r_stats, calc_root_stat1(m1, m1boots[i], sd1, m2, m2boots[i], sd2, N))
 end
 
@@ -166,8 +175,8 @@ new_samples = [
     rand(Normal(4, sd), N)
 ]
 
-sample3 = get_sample_info(new_samples[1], "sample3", n_bins = n_bins)
-sample4 = get_sample_info(new_samples[2], "sample4", n_bins = n_bins)
+sample3 = get_batch_info(new_samples[1], "sample3", K)
+sample4 = get_batch_info(new_samples[2], "sample4", K)
 ```
 
 ### Method 1
@@ -188,7 +197,7 @@ m2boots = sample4["bootstrap_means"];
 
 r_stats = []
 
-for i in 1:n_bins
+for i in 1:K
     push!(r_stats, calc_root_stat1(m1, m1boots[i], sd1, m2, m2boots[i], sd2, N))
 end
 
@@ -217,9 +226,9 @@ println("high ", (m1 - m2) + (d*se) )
 
 r_stats = []
 
-for i in 1:n_bins
+for i in 1:K
     push!(r_stats, calc_root_stat2(m1, m1boots[i], sd1,
-                                    m2, m2boots[i], sd2, n_bins))
+                                    m2, m2boots[i], sd2, K))
 end
 
 r_stats
@@ -233,7 +242,7 @@ d = quantile(r_stats, 1-0.05)
 
 println("d is: ", d)
 
-se = sqrt( ((sd1^2)/n_bins) + ((sd2^2)/n_bins) )
+se = sqrt( ((sd1^2)/K) + ((sd2^2)/K) )
 
 println("low ", (m1 - m2) - (d*se) )
 println("observed ", (m1 - m2))
@@ -247,9 +256,9 @@ println("high ", (m1 - m2) + (d*se) )
 
 r_stats = []
 
-for i in 1:n_bins
+for i in 1:K
     push!(r_stats, calc_root_stat3(m1, m1boots[i], sd1,
-                                    m2, m2boots[i], sd2, n_bins))
+                                    m2, m2boots[i], sd2, K))
 end
 
 r_stats
@@ -263,7 +272,7 @@ d = quantile(r_stats, 1-0.05)
 
 println("d is: ", d)
 
-se = sqrt( ((sd1^2)) + ((sd2^2)) * (n_bins * N) )
+se = sqrt( ((sd1^2)) + ((sd2^2)) * (K * N) )
 
 println("low ", (m1 - m2) - (d*se) )
 println("observed ", (m1 - m2))
