@@ -49,26 +49,42 @@ These are the functions we're using for math calculations (as opposed to the pro
 
 ### Standard Error $S$
 
+The classical standard error.
+
 ```{julia}
 
+# compute the standard error
+function standard_error(sd1, sd2, N)
+    sqrt( ( (sd1^2) + (sd2^2) ) * (N^-1) )
+end
 ```
 
-### Stander Error for a batch $S_b$
+### Standard Error for a batch $S_b$
+
+The standard error modified for our tests
+
+```{julia}
+
+# Z will be either N, M, K
+function standard_error_boot(sd1, sd2, Z)
+    sqrt( ( (sd1^2) + (sd2^2) ) * (Z^-1) )
+end 
+```
+
+
 
 ### Computing $R$
 
 ```{julia}
 
-### Compute the R statistic. Z is the constant used for the division (M, N, K)
-function calc_root_stat(m1, m1b, sd1b, m2, m2b, sd2b, Z)
-    se = sqrt( ((sd1b^2)) + ((sd2b^2) * (Z^-1)) )
+# Compute the root statistic
+function calc_root_stat(m1, m1b, m2, m2b, se)
     abs( (m1b - m2b) - (m1 - m2)/se )
 end
 ```
 
 
 ## Simulation Functions
-
 
 ```{julia}
 
@@ -86,6 +102,8 @@ histogram(samples[1])
 ```
 
 I will now write a separate function to get the information about sample needed to make a comparison.
+
+### Getting batch info
 
 ```{julia}
 
@@ -133,12 +151,15 @@ Now we have a dictionary containing the information about a samples we need to c
 sample2 = get_batch_info(samples[2], "sample2", K)
 ```
 
+### Pairwise comparison
+
 ```{julia}
 
 ### makes comparisons and returns a vector of R statistics
 ### z is the N, K, or M we're testing
-function pairwise_comparison(s1, s2, f, Z)
+function pairwise_comparison(sample1, sample2, Z)
 
+    # get relevant sample information
     s1_theta = sample1["mean"]
     s1_theta_boots = sample1["bootstrap_means"]
     s1_sd_boots = sample1["bootstrap_sds"]
@@ -152,38 +173,72 @@ function pairwise_comparison(s1, s2, f, Z)
 
     # the number of iterations must match the number of batches, K
     for i in 1:K
-        R = f(
-            s1_theta, s1_theta_boots[i], s1_theta_boots[i],
-            s2_theta, s2_theta_boots[i], s2_theta_boots[i],
-            Z
-        )
+        # get the standard error using the current batch sd
+        se = standard_error(s1_sd_boots[i], s2_sd_boots[i], Z)
+        
+        R = calc_root_stat(s1_theta, s1_theta_boots[i],
+                            s2_theta, s2_theta_boots[i], se)
         push!(R_stats, R)
     end
 
     R_stats
 
 end
+```
 
-R_stats_N = pairwise_comparison(samples[1], samples[2], calc_root_stat, N)
-R_stats_K = pairwise_comparison(samples[1], samples[2], calc_root_stat, K)
-R_stats_M = pairwise_comparison(samples[1], samples[2], calc_root_stat, M)
+```{julia}
 
+R_stats_N = pairwise_comparison(sample1, sample2, N)
 histogram(R_stats_N)
+```
+
+```{julia}
+
+R_stats_K = pairwise_comparison(sample1, sample2, K)
+histogram(R_stats_K)
+```
+
+```{julia}
+
+R_stats_M = pairwise_comparison(sample1, sample2, M)
+histogram(R_stats_M)
 ```
 
 
 
 ```{julia}
 
-# d = quantile(r_stats, 1-0.05)
 
-# println("d is: ", d)
+m1 = sample1["mean"]
+sd1 = sample1["sd"]
 
-# se = sqrt( (sd1^2) + (sd2^2) * (N^1) )
+m2 = sample2["mean"]
+sd2 = sample2["sd"]
 
-# println("low ", (m1 - m2) - (d*se) )
-# println("observed ", (m1 - m2))
-# println("high ", (m1 - m2) + (d*se) )
+d = quantile(R_stats_K, 1-0.05)
+
+global_se = standard_error(sd1, sd2, N)
+
+println("low ", (m1 - m2) - (d*global_se) )
+println("observed ", (m1 - m2))
+println("high ", (m1 - m2) + (d * global_se) )
 ```
 
 
+
+
+```{julia}
+
+raw_samples = [generate_sample(2, 0.5, N) for i in 1:10]
+
+samples = []
+
+for i in 1:1000
+    s = generate_sample(2, 0.5, N)
+    sr = get_batch_info(s, string("sample", i), K)
+    push!(samples, sr)
+end
+
+
+
+```
