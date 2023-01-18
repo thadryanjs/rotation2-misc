@@ -230,11 +230,9 @@ println("high ", (m1 - m2) + (d * global_se) )
 
 ```{julia}
 
-raw_samples = [generate_sample(2, 0.5, N) for i in 1:10]
-
 samples = []
 
-for i in 1:1000
+for i in 1:100
     s = generate_sample(2, 0.5, N)
     sr = get_batch_info(s, string("sample", i), K)
     push!(samples, sr)
