@@ -47,6 +47,14 @@ $$
 
 These are the functions we're using for math calculations (as opposed to the programmatic, automation/simulation functions).
 
+### Standard Error $S$
+
+```{julia}
+
+```
+
+### Stander Error for a batch $S_b$
+
 ### Computing $R$
 
 ```{julia}
@@ -58,13 +66,6 @@ function calc_root_stat(m1, m1b, sd1b, m2, m2b, sd2b, Z)
 end
 ```
 
-### Standard Error $S$
-
-```{julia}
-
-```
-
-### Stander Error for a batch $S_b$
 
 ## Simulation Functions
 
@@ -167,7 +168,7 @@ R_stats_N = pairwise_comparison(samples[1], samples[2], calc_root_stat, N)
 R_stats_K = pairwise_comparison(samples[1], samples[2], calc_root_stat, K)
 R_stats_M = pairwise_comparison(samples[1], samples[2], calc_root_stat, M)
 
-histogram(Rs)
+histogram(R_stats_N)
 ```
 
 
@@ -184,3 +185,5 @@ histogram(Rs)
 # println("observed ", (m1 - m2))
 # println("high ", (m1 - m2) + (d*se) )
 ```
+
+
