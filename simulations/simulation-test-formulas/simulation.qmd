@@ -230,9 +230,10 @@ println("high ", (m1 - m2) + (d * global_se) )
 
 ```{julia}
 
+samples_per_experiment = 1000
 samples = []
 
-for i in 1:100
+for i in 1:1000
     s = generate_sample(2, 0.5, N)
     sr = get_batch_info(s, string("sample", i), K)
     push!(samples, sr)
@@ -251,7 +252,7 @@ function run_simulation(samples, Z)
     observed = []
     upper = []
 
-    r_string_dict = Dict()
+    r_stats_dict= Dict()
 
     for i in 1:length(samples)
         for j in 1:length(samples)
@@ -303,143 +304,47 @@ function run_simulation(samples, Z)
             upper = upper,
         ),
 
-        r_string_dict
+        r_stats_dict
     )
 
 end
-
-sim_N = run_simulation(samples, N)
 ```
 
-## The experiment using K
+
+### Simulation using N
 
 ```{julia}
 
-comparison = []
+sim_N = run_simulation(samples, N)
 
-lower = []
-observed = []
-upper = []
+first(sim_N[1], 10)
+```
 
-# we can look up any comparison and get the r_stats
-r_stats_dict_K = Dict()
+## The experiment using K
+```{julia}
 
-size = 10
+sim_K = run_simulation(samples, K)
 
-for i in 1:size
-    for j in 1:size
-        if i != j
-
-            # unpack what we'll need
-            s1 = samples[i]
-            s2 = samples[j]
-
-            m1 = s1["mean"]
-            m2 = s2["mean"]
-
-            sd1 = s1["sd"]
-            sd2 = s2["sd"]
-            
-            # note the comparison for the record
-            c = string(i, "_vs_", j)
-            
-            # make the comparison to get the root stats
-            ### note the Z we're using is K
-            r_stats = pairwise_comparison(s1, s2, K)
-            
-            # compute the "outer se" of the comparison
-            global_se = standard_error(sd1, sd2, N)
-
-            # get the d statistic
-            d = quantile(r_stats, 1-0.05)
-
-            l = (m1 - m2) - (d * global_se)
-            o = (m1 - m2)
-            u = (m1 - m2) + (d * global_se)
-
-            push!(comparison, c )
-            push!(lower, l)
-            push!(observed, o)
-            push!(upper, u)
-
-            r_stats_dict[comparison] = r_stats
-
-        end
-    end
-end
-
-df_K = DataFrame(
-    comparison = comparison,
-    lower = lower, 
-    observed = observed,
-    upper = upper,
-    r_stats = r
-);
-
-first(df_N, 10)
+first(sim_K[1], 10)
 ```
 
 ## The experiment using M
 
 ```{julia}
 
-comparison = []
+sim_M = run_simulation(samples, M)
 
-lower = []
-observed = []
-upper = []
-
-size = 10
-
-for i in 1:size
-    for j in 1:size
-        if i != j
-
-            # unpack what we'll need
-            s1 = samples[i]
-            s2 = samples[j]
-
-            m1 = s1["mean"]
-            m2 = s2["mean"]
-
-            sd1 = s1["sd"]
-            sd2 = s2["sd"]
-            
-            # note the comparison for the record
-            c = string(i, "_vs_", j)
-            
-            # make the comparison to get the root stats
-            r_stats = pairwise_comparison(s1, s2, N)
-            
-            # compute the "outer se" of the comparison
-            global_se = standard_error(sd1, sd2, M)
-
-            # get the d statistic
-            d = quantile(r_stats, 1-0.05)
-
-            l = (m1 - m2) - (d * global_se)
-            o = (m1 - m2)
-            u = (m1 - m2) + (d * global_se)
-
-            push!(comparison, c )
-            push!(lower, l)
-            push!(observed, o)
-            push!(upper, u)
-
-        end
-    end
-end
-
-df_M = DataFrame(
-    comparison = comparison,
-    lower = lower, 
-    observed = observed,
-    upper = upper
-);
-
-first(df_N, 10)
+first(sim_M[1], 10)
 ```
 
+
 ```{julia}
-r_stats_dict
+println("End")
+```
+
+Can I just slurp out all the Rs and make a histogram for each one? They're the same distribution
+
+
+```{julia}
+
 ```
