@@ -238,7 +238,56 @@ for i in 1:1000
     sr = get_batch_info(s, string("sample", i), K)
     push!(samples, sr)
 end
+```
 
 
+
+```{julia}
+
+lower = []
+observed = []
+upper = []
+
+size = 10
+
+for i in 1:size
+    for j in 1:size
+        if i != j
+
+            # unpack what we'll need
+            s1 = samples[i]
+            s2 = samples[j]
+
+            m1 = s1["mean"]
+            m2 = s2["mean"]
+
+            sd1 = s1["sd"]
+            sd2 = s2["sd"]
+            
+            # note the comparison for the record
+            comparison = string(i, "_vs_", j)
+            
+            # make the comparison to get the root stats
+            r_stats = pairwise_comparison(s1, s2, N)
+            
+            # compute the "outer se" of the comparison
+            global_se = standard_error(sd1, sd2, N)
+
+            # get the d statistic
+            d = quantile(r_stats, 1-0.05)
+
+            l = (m1 - m2) - (d * global_se)
+            o = (m1 - m2)
+            u = (m1 - m2) + (d * global_se)
+
+            push!(lower, l)
+            push!(observed, o)
+            push!(upper, u)
+
+        end
+    end
+end
+
+df_N = Data.frmae]
 
 ```
