@@ -91,7 +91,7 @@ end
 
 # Compute the root statistic
 function calc_root_stat(m1, m1b, m2, m2b, se)
-    abs( (m1b - m2b) - (m1 - m2)/se )
+    abs( ( (m1b - m2b) - (m1 - m2) ) /se )
 end
 ```
 
