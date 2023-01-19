@@ -4,6 +4,8 @@
 using Random
 using Distributions
 using Plots
+using DataFrames
+using CSV
 ```
 
 ## Definitions
@@ -27,9 +29,17 @@ using Plots
 
 Random.seed!(8675309)
 
-N = 10000
-K = 100
+# observations per sample
+N = 100000
+# number of batches
+K = Int(N/10)
+# oberservations per batch
 M = Int(N/K)
+
+# number of samples
+samples_per_experiment = 50
+
+println("\nN: ", N, "\nK: ", K, "\nM: ", M)
 ```
 
 The log-normal distribution:
@@ -47,44 +57,64 @@ $$
 
 These are the functions we're using for math calculations (as opposed to the programmatic, automation/simulation functions).
 
+### Standard Error $S$
+
+The classical standard error.
+
+```{julia}
+
+# compute the standard error
+function standard_error(sd1, sd2, N)
+    sqrt( ( (sd1^2) + (sd2^2) ) * (N^-1) )
+end
+```
+
+### Standard Error for a batch $S_b$
+
+The standard error modified for our tests
+
+```{julia}
+
+# Z will be either N, M, K
+function standard_error_boot(sd1, sd2, Z)
+    sqrt( ( (sd1^2) + (sd2^2) ) * (Z^-1) )
+end 
+```
+
+
+
 ### Computing $R$
 
 ```{julia}
 
-### Compute the R statistic. Z is the constant used for the division (M, N, K)
-function calc_root_stat(m1, m1b, sd1b, m2, m2b, sd2b, Z)
-    se = sqrt( ((sd1b^2)) + ((sd2b^2) * (Z^-1)) )
+# Compute the root statistic
+function calc_root_stat(m1, m1b, m2, m2b, se)
     abs( (m1b - m2b) - (m1 - m2)/se )
 end
 ```
 
-### Standard Error $S$
-
-```{julia}
-
-```
-
-### Stander Error for a batch $S_b$
 
 ## Simulation Functions
 
-
 ```{julia}
-
+# create a sample of log-normal data
 function generate_sample(mu, sd, N)
-
+    # a function to exp every number of a vector
     exp_vector(vec) = [exp(i) for i in vec]
 
     exp_vector(rand(Normal(mu, sd), N))
 
 end
 
+# a test sample
 samples = [generate_sample(2, 0.5, N) for i in 1:2]
 
 histogram(samples[1])
 ```
 
 I will now write a separate function to get the information about sample needed to make a comparison.
+
+### Getting batch info
 
 ```{julia}
 
@@ -126,18 +156,28 @@ end
 sample1 = get_batch_info(samples[1], "sample1", K)
 ```
 
+
+```{julia}
+
+# println(length(sample1["bootstrap_means"]))
+```
+
+
 Now we have a dictionary containing the information about a samples we need to compare it to another. We will get another sample to compare it to.
 
 ```{julia}
 sample2 = get_batch_info(samples[2], "sample2", K)
 ```
 
+### Pairwise comparison
+
 ```{julia}
 
 ### makes comparisons and returns a vector of R statistics
 ### z is the N, K, or M we're testing
-function pairwise_comparison(s1, s2, f, Z)
+function pairwise_comparison(sample1, sample2, Z)
 
+    # get relevant sample information
     s1_theta = sample1["mean"]
     s1_theta_boots = sample1["bootstrap_means"]
     s1_sd_boots = sample1["bootstrap_sds"]
@@ -151,36 +191,259 @@ function pairwise_comparison(s1, s2, f, Z)
 
     # the number of iterations must match the number of batches, K
     for i in 1:K
-        R = f(
-            s1_theta, s1_theta_boots[i], s1_theta_boots[i],
-            s2_theta, s2_theta_boots[i], s2_theta_boots[i],
-            Z
-        )
+        # get the standard error using the current batch sd
+        se = standard_error(s1_sd_boots[i], s2_sd_boots[i], Z)
+        
+        R = calc_root_stat(s1_theta, s1_theta_boots[i],
+                            s2_theta, s2_theta_boots[i], se)
         push!(R_stats, R)
     end
 
     R_stats
 
 end
+```
 
-R_stats_N = pairwise_comparison(samples[1], samples[2], calc_root_stat, N)
-R_stats_K = pairwise_comparison(samples[1], samples[2], calc_root_stat, K)
-R_stats_M = pairwise_comparison(samples[1], samples[2], calc_root_stat, M)
+```{julia}
 
-histogram(Rs)
+R_stats_N = pairwise_comparison(sample1, sample2, N)
+histogram(R_stats_N)
+```
+
+```{julia}
+
+R_stats_K = pairwise_comparison(sample1, sample2, K)
+histogram(R_stats_K)
+```
+
+```{julia}
+
+R_stats_M = pairwise_comparison(sample1, sample2, M)
+histogram(R_stats_M)
 ```
 
 
 
 ```{julia}
 
-# d = quantile(r_stats, 1-0.05)
 
-# println("d is: ", d)
+m1 = sample1["mean"]
+sd1 = sample1["sd"]
 
-# se = sqrt( (sd1^2) + (sd2^2) * (N^1) )
+m2 = sample2["mean"]
+sd2 = sample2["sd"]
 
-# println("low ", (m1 - m2) - (d*se) )
-# println("observed ", (m1 - m2))
-# println("high ", (m1 - m2) + (d*se) )
+d = quantile(R_stats_K, 1-0.05)
+
+global_se = standard_error(sd1, sd2, N)
+
+println("low ", (m1 - m2) - (d*global_se) )
+println("observed ", (m1 - m2))
+println("high ", (m1 - m2) + (d * global_se) )
+```
+
+
+
+
+```{julia}
+
+samples = []
+
+for i in 1:samples_per_experiment
+    s = generate_sample(2, 0.5, N)
+    sr = get_batch_info(s, string("sample", i), K)
+    push!(samples, sr)
+end
+```
+
+## The simulation
+
+```{julia}
+
+function run_simulation(samples, Z)
+
+    comparison = []
+
+    lower = []
+    observed = []
+    upper = []
+
+    r_stats_dict = Dict()
+
+    for i in 1:length(samples)
+        for j in 1:length(samples)
+            if i != j
+
+                # note the comparison for the record
+                c = string(i, "_vs_", j)
+                
+                if string(j, "_vs_", i) in comparison
+                    continue
+                end
+
+                # unpack what we'll need
+                s1 = samples[i]
+                s2 = samples[j]
+
+                m1 = s1["mean"]
+                m2 = s2["mean"]
+
+                sd1 = s1["sd"]
+                sd2 = s2["sd"]
+                
+                
+                # make the comparison to get the root stats
+                r_stats = pairwise_comparison(s1, s2, Z)
+                
+                # compute the "outer se" of the comparison
+                ### note that the Z we're using is N
+                global_se = standard_error(sd1, sd2, N)
+
+                # get the d statistic
+                d = quantile(r_stats, 1-0.05)
+
+                l = (m1 - m2) - (d * global_se)
+                o = (m1 - m2)
+                u = (m1 - m2) + (d * global_se)
+
+                push!(comparison, c )
+                push!(lower, l)
+                push!(observed, o)
+                push!(upper, u)
+
+                r_stats_dict[comparison] = r_stats
+
+            end
+        end
+    end
+
+    (
+        DataFrame(
+            comparison = comparison,
+            lower = lower, 
+            observed = observed,
+            upper = upper,
+        ),
+
+        r_stats_dict
+    )
+
+end
+```
+
+```{julia}
+
+test = []
+for i in 1:10
+    for j in 1:10
+        if i != j
+            c = string(i, "_vs_", j)
+            if string(j, "_vs_", i) in test
+                continue
+            end
+            push!(test, c)
+        end
+    end
+end
+length(test)
+for i in test
+    println(i)
+end
+```
+
+```{julia}
+x = [1,2,3]
+
+!(5 in x)
+```
+
+```{julia}
+
+sim_N = run_simulation(samples, N)
+
+nrow(sim_N[1])
+
+df = sim_N[1]
+
+first(df, 5)
+```
+
+
+### Using N
+
+```{julia}
+
+function extract_all_rstats(d)
+    
+    r_stats = []
+
+    for (k, v) in d
+        for i in v
+            push!(r_stats, i)
+        end
+    end
+
+    r_stats
+
+end
+
+```
+
+```{julia}
+
+sim_N = run_simulation(samples, N)
+
+first(sim_N[1], 10)
+
+CSV.write("outputs/sim_N.csv", sim_N[1])
+
+histogram(extract_all_rstats(sim_N[2]))
+```
+
+```{julia}
+nrow(sim_N[1])
+```
+
+### Using K
+
+```{julia}
+
+sim_K = run_simulation(samples, K)
+
+first(sim_K[1], 10)
+
+CSV.write("outputs/sim_K.csv", sim_K[1])
+
+histogram(extract_all_rstats(sim_K[2]))
+```
+
+```{julia}
+d = sim_K[2]
+
+values(d)
+```
+
+
+### Using M
+
+```{julia}
+
+sim_M = run_simulation(samples, M)
+
+first(sim_M[1], 10)
+
+CSV.write("outputs/sim_M.csv", sim_M[1])
+
+length(extract_all_rstats(sim_M[2]))
+```
+
+
+```{julia}
+println("End...")
+```
+
+Can I just slurp out all the Rs and make a histogram for each one? They're the same distribution
+
+```{julia}
+
 ```
