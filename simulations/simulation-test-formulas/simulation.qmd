@@ -30,14 +30,14 @@ using CSV
 Random.seed!(8675309)
 
 # observations per sample
-N = 100
+N = 100000
 # number of batches
 K = Int(N/10)
 # oberservations per batch
 M = Int(N/K)
 
 # number of samples
-samples_per_experiment = 1000
+samples_per_experiment = 50
 
 println("\nN: ", N, "\nK: ", K, "\nM: ", M)
 ```
