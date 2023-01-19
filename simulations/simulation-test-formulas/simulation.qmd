@@ -30,14 +30,14 @@ using CSV
 Random.seed!(8675309)
 
 # observations per sample
-N = 100000
+N = 10000
 # number of batches
 K = Int(N/10)
-# oberservations per batch
+# observations per batch
 M = Int(N/K)
 
 # number of samples
-samples_per_experiment = 50
+samples_per_experiment = 250
 
 println("\nN: ", N, "\nK: ", K, "\nM: ", M)
 ```
@@ -415,12 +415,6 @@ first(sim_K[1], 10)
 CSV.write("outputs/sim_K.csv", sim_K[1])
 
 histogram(extract_all_rstats(sim_K[2]))
-```
-
-```{julia}
-d = sim_K[2]
-
-values(d)
 ```
 
 
