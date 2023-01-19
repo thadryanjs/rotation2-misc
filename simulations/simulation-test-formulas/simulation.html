@@ -96,9 +96,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <script src="simulation_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="simulation_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="simulation_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
-<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
@@ -116,7 +113,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Random</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Distributions</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Plots</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DataFrames</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DataFrames</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">CSV</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="definitions" class="level2">
 <h2 class="anchored" data-anchor-id="definitions">Definitions</h2>
@@ -138,11 +136,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Random</span>.<span class="fu">seed!</span>(<span class="fl">8675309</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> <span class="fl">10000</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>K <span class="op">=</span> <span class="fl">100</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>M <span class="op">=</span> <span class="fu">Int</span>(N<span class="op">/</span>K)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="3">
-<pre><code>100</code></pre>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> <span class="fl">1000</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>K <span class="op">=</span> <span class="fl">10</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>M <span class="op">=</span> <span class="fu">Int</span>(N<span class="op">/</span>K)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"N: "</span>, N, <span class="st">", K: "</span>, K, <span class="st">", M:"</span>, M)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>N: 1000, K: 10, M:100</code></pre>
 </div>
 </div>
 <p>The log-normal distribution:</p>
@@ -258,8 +258,8 @@ exp(X) \sim LogNormal(\mu,\sigma)
   "name"            =&gt; "sample1"
   "bootstrap_sds"   =&gt; Any[4.36335, 5.42013, 3.97525, 4.31948, 4.04444, 5.56318…
   "bootstrap_means" =&gt; Any[8.30349, 8.42795, 8.32042, 8.30544, 8.44921, 9.15441…
-  "mean"            =&gt; 8.4782
-  "sd"              =&gt; 4.58788</code></pre>
+  "mean"            =&gt; 8.46081
+  "sd"              =&gt; 4.55057</code></pre>
 </div>
 </div>
 <p>Now we have a dictionary containing the information about a samples we need to compare it to another. We will get another sample to compare it to.</p>
@@ -268,10 +268,10 @@ exp(X) \sim LogNormal(\mu,\sigma)
 <div class="cell-output cell-output-display" data-execution_count="9">
 <pre><code>Dict{String, Any} with 5 entries:
   "name"            =&gt; "sample2"
-  "bootstrap_sds"   =&gt; Any[6.13506, 4.27489, 4.44676, 4.04586, 4.13877, 3.5623,…
-  "bootstrap_means" =&gt; Any[9.18479, 8.30144, 8.54251, 8.12945, 8.36763, 7.65243…
-  "mean"            =&gt; 8.38915
-  "sd"              =&gt; 4.48351</code></pre>
+  "bootstrap_sds"   =&gt; Any[3.60239, 4.25253, 5.43428, 5.43176, 3.83996, 4.83315…
+  "bootstrap_means" =&gt; Any[7.99089, 8.09229, 8.57361, 8.33895, 9.05098, 8.25472…
+  "mean"            =&gt; 8.40228
+  "sd"              =&gt; 4.52148</code></pre>
 </div>
 </div>
 </section>
@@ -347,220 +347,164 @@ exp(X) \sim LogNormal(\mu,\sigma)
 <span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"observed "</span>, (m1 <span class="op">-</span> m2))</span>
 <span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"high "</span>, (m1 <span class="op">-</span> m2) <span class="op">+</span> (d <span class="op">*</span> global_se) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>low 0.004958335892974855
-observed 0.08904705965003501
-high 0.17313578340709518</code></pre>
+<pre><code>low -0.09700940771323927
+observed 0.05853031706908318
+high 0.21407004185140563</code></pre>
 </div>
 </div>
 <div class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>raw_samples <span class="op">=</span> [<span class="fu">generate_sample</span>(<span class="fl">2</span>, <span class="fl">0.5</span>, N) for i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>]</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>samples <span class="op">=</span> []</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">1000</span></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    s <span class="op">=</span> <span class="fu">generate_sample</span>(<span class="fl">2</span>, <span class="fl">0.5</span>, N)</span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    sr <span class="op">=</span> <span class="fu">get_batch_info</span>(s, <span class="fu">string</span>(<span class="st">"sample"</span>, i), K)</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">push!</span>(samples, sr)</span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>samples_per_experiment <span class="op">=</span> <span class="fl">1000</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>samples <span class="op">=</span> []</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">100</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    s <span class="op">=</span> <span class="fu">generate_sample</span>(<span class="fl">2</span>, <span class="fl">0.5</span>, N)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    sr <span class="op">=</span> <span class="fu">get_batch_info</span>(s, <span class="fu">string</span>(<span class="st">"sample"</span>, i), K)</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">push!</span>(samples, sr)</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
-<section id="inner-se-using-n" class="level2">
-<h2 class="anchored" data-anchor-id="inner-se-using-n">Inner SE using N</h2>
+<section id="the-simulation" class="level2">
+<h2 class="anchored" data-anchor-id="the-simulation">The simulation</h2>
 <div class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>comparison <span class="op">=</span> []</span>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">run_simulation</span>(samples, Z)</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>lower <span class="op">=</span> []</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>observed <span class="op">=</span> []</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>upper <span class="op">=</span> []</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>size <span class="op">=</span> <span class="fl">10</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    comparison <span class="op">=</span> []</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    lower <span class="op">=</span> []</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    observed <span class="op">=</span> []</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    upper <span class="op">=</span> []</span>
 <span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>size</span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>size</span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> i <span class="op">!=</span> j</span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>            <span class="co"># unpack what we'll need</span></span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>            s1 <span class="op">=</span> samples[i]</span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>            s2 <span class="op">=</span> samples[j]</span>
-<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>            m1 <span class="op">=</span> s1[<span class="st">"mean"</span>]</span>
-<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>            m2 <span class="op">=</span> s2[<span class="st">"mean"</span>]</span>
-<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>            sd1 <span class="op">=</span> s1[<span class="st">"sd"</span>]</span>
-<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>            sd2 <span class="op">=</span> s2[<span class="st">"sd"</span>]</span>
-<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>            </span>
-<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>            <span class="co"># note the comparison for the record</span></span>
-<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>            c <span class="op">=</span> <span class="fu">string</span>(i, <span class="st">"_vs_"</span>, j)</span>
-<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a>            </span>
-<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a>            <span class="co"># make the comparison to get the root stats</span></span>
-<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a>            r_stats <span class="op">=</span> <span class="fu">pairwise_comparison</span>(s1, s2, N)</span>
-<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a>            </span>
-<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a>            <span class="co"># compute the "outer se" of the comparison</span></span>
-<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a>            <span class="co">### note that the Z we're using is N</span></span>
-<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a>            global_se <span class="op">=</span> <span class="fu">standard_error</span>(sd1, sd2, N)</span>
-<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a>            <span class="co"># get the d statistic</span></span>
-<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a>            d <span class="op">=</span> <span class="fu">quantile</span>(r_stats, <span class="fl">1</span><span class="op">-</span><span class="fl">0.05</span>)</span>
-<span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a>            l <span class="op">=</span> (m1 <span class="op">-</span> m2) <span class="op">-</span> (d <span class="op">*</span> global_se)</span>
-<span id="cb23-37"><a href="#cb23-37" aria-hidden="true" tabindex="-1"></a>            o <span class="op">=</span> (m1 <span class="op">-</span> m2)</span>
-<span id="cb23-38"><a href="#cb23-38" aria-hidden="true" tabindex="-1"></a>            u <span class="op">=</span> (m1 <span class="op">-</span> m2) <span class="op">+</span> (d <span class="op">*</span> global_se)</span>
-<span id="cb23-39"><a href="#cb23-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-40"><a href="#cb23-40" aria-hidden="true" tabindex="-1"></a>            <span class="fu">push!</span>(comparison, c )</span>
-<span id="cb23-41"><a href="#cb23-41" aria-hidden="true" tabindex="-1"></a>            <span class="fu">push!</span>(lower, l)</span>
-<span id="cb23-42"><a href="#cb23-42" aria-hidden="true" tabindex="-1"></a>            <span class="fu">push!</span>(observed, o)</span>
-<span id="cb23-43"><a href="#cb23-43" aria-hidden="true" tabindex="-1"></a>            <span class="fu">push!</span>(upper, u)</span>
-<span id="cb23-44"><a href="#cb23-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-45"><a href="#cb23-45" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
-<span id="cb23-46"><a href="#cb23-46" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb23-47"><a href="#cb23-47" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    r_stats_dict<span class="op">=</span> <span class="fu">Dict</span>()</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu">length</span>(samples)</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu">length</span>(samples)</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> i <span class="op">!=</span> j</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>                <span class="co"># unpack what we'll need</span></span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>                s1 <span class="op">=</span> samples[i]</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>                s2 <span class="op">=</span> samples[j]</span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>                m1 <span class="op">=</span> s1[<span class="st">"mean"</span>]</span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>                m2 <span class="op">=</span> s2[<span class="st">"mean"</span>]</span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>                sd1 <span class="op">=</span> s1[<span class="st">"sd"</span>]</span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>                sd2 <span class="op">=</span> s2[<span class="st">"sd"</span>]</span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>                </span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a>                <span class="co"># note the comparison for the record</span></span>
+<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a>                c <span class="op">=</span> <span class="fu">string</span>(i, <span class="st">"_vs_"</span>, j)</span>
+<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a>                </span>
+<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a>                <span class="co"># make the comparison to get the root stats</span></span>
+<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a>                r_stats <span class="op">=</span> <span class="fu">pairwise_comparison</span>(s1, s2, Z)</span>
+<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a>                </span>
+<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a>                <span class="co"># compute the "outer se" of the comparison</span></span>
+<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a>                <span class="co">### note that the Z we're using is N</span></span>
+<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a>                global_se <span class="op">=</span> <span class="fu">standard_error</span>(sd1, sd2, N)</span>
+<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a>                <span class="co"># get the d statistic</span></span>
+<span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a>                d <span class="op">=</span> <span class="fu">quantile</span>(r_stats, <span class="fl">1</span><span class="op">-</span><span class="fl">0.05</span>)</span>
+<span id="cb23-37"><a href="#cb23-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-38"><a href="#cb23-38" aria-hidden="true" tabindex="-1"></a>                l <span class="op">=</span> (m1 <span class="op">-</span> m2) <span class="op">-</span> (d <span class="op">*</span> global_se)</span>
+<span id="cb23-39"><a href="#cb23-39" aria-hidden="true" tabindex="-1"></a>                o <span class="op">=</span> (m1 <span class="op">-</span> m2)</span>
+<span id="cb23-40"><a href="#cb23-40" aria-hidden="true" tabindex="-1"></a>                u <span class="op">=</span> (m1 <span class="op">-</span> m2) <span class="op">+</span> (d <span class="op">*</span> global_se)</span>
+<span id="cb23-41"><a href="#cb23-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-42"><a href="#cb23-42" aria-hidden="true" tabindex="-1"></a>                <span class="fu">push!</span>(comparison, c )</span>
+<span id="cb23-43"><a href="#cb23-43" aria-hidden="true" tabindex="-1"></a>                <span class="fu">push!</span>(lower, l)</span>
+<span id="cb23-44"><a href="#cb23-44" aria-hidden="true" tabindex="-1"></a>                <span class="fu">push!</span>(observed, o)</span>
+<span id="cb23-45"><a href="#cb23-45" aria-hidden="true" tabindex="-1"></a>                <span class="fu">push!</span>(upper, u)</span>
+<span id="cb23-46"><a href="#cb23-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-47"><a href="#cb23-47" aria-hidden="true" tabindex="-1"></a>                r_stats_dict[comparison] <span class="op">=</span> r_stats</span>
 <span id="cb23-48"><a href="#cb23-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-49"><a href="#cb23-49" aria-hidden="true" tabindex="-1"></a>df_N <span class="op">=</span> <span class="fu">DataFrame</span>(</span>
-<span id="cb23-50"><a href="#cb23-50" aria-hidden="true" tabindex="-1"></a>    comparison <span class="op">=</span> comparison,</span>
-<span id="cb23-51"><a href="#cb23-51" aria-hidden="true" tabindex="-1"></a>    lower <span class="op">=</span> lower, </span>
-<span id="cb23-52"><a href="#cb23-52" aria-hidden="true" tabindex="-1"></a>    observed <span class="op">=</span> observed,</span>
-<span id="cb23-53"><a href="#cb23-53" aria-hidden="true" tabindex="-1"></a>    upper <span class="op">=</span> upper</span>
-<span id="cb23-54"><a href="#cb23-54" aria-hidden="true" tabindex="-1"></a>);</span>
-<span id="cb23-55"><a href="#cb23-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-56"><a href="#cb23-56" aria-hidden="true" tabindex="-1"></a><span class="fu">first</span>(df_N, <span class="fl">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb23-49"><a href="#cb23-49" aria-hidden="true" tabindex="-1"></a>            <span class="cf">end</span></span>
+<span id="cb23-50"><a href="#cb23-50" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
+<span id="cb23-51"><a href="#cb23-51" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb23-52"><a href="#cb23-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-53"><a href="#cb23-53" aria-hidden="true" tabindex="-1"></a>    (</span>
+<span id="cb23-54"><a href="#cb23-54" aria-hidden="true" tabindex="-1"></a>        <span class="fu">DataFrame</span>(</span>
+<span id="cb23-55"><a href="#cb23-55" aria-hidden="true" tabindex="-1"></a>            comparison <span class="op">=</span> comparison,</span>
+<span id="cb23-56"><a href="#cb23-56" aria-hidden="true" tabindex="-1"></a>            lower <span class="op">=</span> lower, </span>
+<span id="cb23-57"><a href="#cb23-57" aria-hidden="true" tabindex="-1"></a>            observed <span class="op">=</span> observed,</span>
+<span id="cb23-58"><a href="#cb23-58" aria-hidden="true" tabindex="-1"></a>            upper <span class="op">=</span> upper,</span>
+<span id="cb23-59"><a href="#cb23-59" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb23-60"><a href="#cb23-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-61"><a href="#cb23-61" aria-hidden="true" tabindex="-1"></a>        r_stats_dict</span>
+<span id="cb23-62"><a href="#cb23-62" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb23-63"><a href="#cb23-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-64"><a href="#cb23-64" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="16">
-
-<div><div style="float: left;"><span>10×4 DataFrame</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;"><table class="data-frame table table-sm table-striped" style="margin-bottom: 6px;"><thead><tr class="header"><th class="rowNumber" style="font-weight: bold; text-align: right;">Row</th><th style="text-align: left;">comparison</th><th style="text-align: left;">lower</th><th style="text-align: left;">observed</th><th style="text-align: left;">upper</th></tr><tr class="subheader headerLastRow"><th class="rowNumber" style="font-weight: bold; text-align: right;"></th><th title="Any" style="text-align: left;">Any</th><th title="Any" style="text-align: left;">Any</th><th title="Any" style="text-align: left;">Any</th><th title="Any" style="text-align: left;">Any</th></tr></thead><tbody><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">1</td><td style="text-align: left;">1_vs_2</td><td style="text-align: left;">-0.183111</td><td style="text-align: left;">-0.0644251</td><td style="text-align: left;">0.0542613</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">2</td><td style="text-align: left;">1_vs_3</td><td style="text-align: left;">-0.107666</td><td style="text-align: left;">-0.0228348</td><td style="text-align: left;">0.0619966</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">3</td><td style="text-align: left;">1_vs_4</td><td style="text-align: left;">-0.137547</td><td style="text-align: left;">-0.0392121</td><td style="text-align: left;">0.0591223</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">4</td><td style="text-align: left;">1_vs_5</td><td style="text-align: left;">-0.0517339</td><td style="text-align: left;">0.0496967</td><td style="text-align: left;">0.151127</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">5</td><td style="text-align: left;">1_vs_6</td><td style="text-align: left;">-0.0705754</td><td style="text-align: left;">0.0106686</td><td style="text-align: left;">0.0919126</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">6</td><td style="text-align: left;">1_vs_7</td><td style="text-align: left;">-0.0546606</td><td style="text-align: left;">0.0256699</td><td style="text-align: left;">0.106</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">7</td><td style="text-align: left;">1_vs_8</td><td style="text-align: left;">-0.0534846</td><td style="text-align: left;">0.0905882</td><td style="text-align: left;">0.234661</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">8</td><td style="text-align: left;">1_vs_9</td><td style="text-align: left;">-0.0529058</td><td style="text-align: left;">0.116602</td><td style="text-align: left;">0.28611</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">9</td><td style="text-align: left;">1_vs_10</td><td style="text-align: left;">-0.203392</td><td style="text-align: left;">-0.0682465</td><td style="text-align: left;">0.0668988</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">10</td><td style="text-align: left;">2_vs_1</td><td style="text-align: left;">-0.0542613</td><td style="text-align: left;">0.0644251</td><td style="text-align: left;">0.183111</td></tr></tbody></table></div>
+<pre><code>run_simulation (generic function with 1 method)</code></pre>
 </div>
 </div>
-</section>
-<section id="the-experiment-using-k" class="level2">
-<h2 class="anchored" data-anchor-id="the-experiment-using-k">The experiment using K</h2>
+<section id="using-n" class="level3">
+<h3 class="anchored" data-anchor-id="using-n">Using N</h3>
 <div class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>comparison <span class="op">=</span> []</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>lower <span class="op">=</span> []</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>observed <span class="op">=</span> []</span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>upper <span class="op">=</span> []</span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> []</span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>size <span class="op">=</span> <span class="fl">10</span></span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>size</span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>size</span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> i <span class="op">!=</span> j</span>
-<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>            <span class="co"># unpack what we'll need</span></span>
-<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>            s1 <span class="op">=</span> samples[i]</span>
-<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>            s2 <span class="op">=</span> samples[j]</span>
-<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>            m1 <span class="op">=</span> s1[<span class="st">"mean"</span>]</span>
-<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>            m2 <span class="op">=</span> s2[<span class="st">"mean"</span>]</span>
-<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>            sd1 <span class="op">=</span> s1[<span class="st">"sd"</span>]</span>
-<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a>            sd2 <span class="op">=</span> s2[<span class="st">"sd"</span>]</span>
-<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a>            </span>
-<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a>            <span class="co"># note the comparison for the record</span></span>
-<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a>            c <span class="op">=</span> <span class="fu">string</span>(i, <span class="st">"_vs_"</span>, j)</span>
-<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a>            </span>
-<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a>            <span class="co"># make the comparison to get the root stats</span></span>
-<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a>            <span class="co">### note the Z we're using is K</span></span>
-<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a>            r_stats <span class="op">=</span> <span class="fu">pairwise_comparison</span>(s1, s2, K)</span>
-<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a>            </span>
-<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a>            <span class="co"># compute the "outer se" of the comparison</span></span>
-<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a>            global_se <span class="op">=</span> <span class="fu">standard_error</span>(sd1, sd2, N)</span>
-<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-34"><a href="#cb24-34" aria-hidden="true" tabindex="-1"></a>            <span class="co"># get the d statistic</span></span>
-<span id="cb24-35"><a href="#cb24-35" aria-hidden="true" tabindex="-1"></a>            d <span class="op">=</span> <span class="fu">quantile</span>(r_stats, <span class="fl">1</span><span class="op">-</span><span class="fl">0.05</span>)</span>
-<span id="cb24-36"><a href="#cb24-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-37"><a href="#cb24-37" aria-hidden="true" tabindex="-1"></a>            l <span class="op">=</span> (m1 <span class="op">-</span> m2) <span class="op">-</span> (d <span class="op">*</span> global_se)</span>
-<span id="cb24-38"><a href="#cb24-38" aria-hidden="true" tabindex="-1"></a>            o <span class="op">=</span> (m1 <span class="op">-</span> m2)</span>
-<span id="cb24-39"><a href="#cb24-39" aria-hidden="true" tabindex="-1"></a>            u <span class="op">=</span> (m1 <span class="op">-</span> m2) <span class="op">+</span> (d <span class="op">*</span> global_se)</span>
-<span id="cb24-40"><a href="#cb24-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-41"><a href="#cb24-41" aria-hidden="true" tabindex="-1"></a>            <span class="fu">push!</span>(comparison, c )</span>
-<span id="cb24-42"><a href="#cb24-42" aria-hidden="true" tabindex="-1"></a>            <span class="fu">push!</span>(lower, l)</span>
-<span id="cb24-43"><a href="#cb24-43" aria-hidden="true" tabindex="-1"></a>            <span class="fu">push!</span>(observed, o)</span>
-<span id="cb24-44"><a href="#cb24-44" aria-hidden="true" tabindex="-1"></a>            <span class="fu">push!</span>(upper, u)</span>
-<span id="cb24-45"><a href="#cb24-45" aria-hidden="true" tabindex="-1"></a>            <span class="fu">push!</span>(r, r_stats)</span>
-<span id="cb24-46"><a href="#cb24-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-47"><a href="#cb24-47" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
-<span id="cb24-48"><a href="#cb24-48" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb24-49"><a href="#cb24-49" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
-<span id="cb24-50"><a href="#cb24-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-51"><a href="#cb24-51" aria-hidden="true" tabindex="-1"></a>df_K <span class="op">=</span> <span class="fu">DataFrame</span>(</span>
-<span id="cb24-52"><a href="#cb24-52" aria-hidden="true" tabindex="-1"></a>    comparison <span class="op">=</span> comparison,</span>
-<span id="cb24-53"><a href="#cb24-53" aria-hidden="true" tabindex="-1"></a>    lower <span class="op">=</span> lower, </span>
-<span id="cb24-54"><a href="#cb24-54" aria-hidden="true" tabindex="-1"></a>    observed <span class="op">=</span> observed,</span>
-<span id="cb24-55"><a href="#cb24-55" aria-hidden="true" tabindex="-1"></a>    upper <span class="op">=</span> upper,</span>
-<span id="cb24-56"><a href="#cb24-56" aria-hidden="true" tabindex="-1"></a>    r_stats <span class="op">=</span> r</span>
-<span id="cb24-57"><a href="#cb24-57" aria-hidden="true" tabindex="-1"></a>);</span>
-<span id="cb24-58"><a href="#cb24-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-59"><a href="#cb24-59" aria-hidden="true" tabindex="-1"></a><span class="fu">first</span>(df_N, <span class="fl">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">extract_all_rstats</span>(d)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    r_stats <span class="op">=</span> []</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (k, v) <span class="kw">in</span> d</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i <span class="kw">in</span> v</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>            <span class="fu">push!</span>(r_stats, i)</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>    r_stats</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="17">
-
-<div><div style="float: left;"><span>10×4 DataFrame</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;"><table class="data-frame table table-sm table-striped" style="margin-bottom: 6px;"><thead><tr class="header"><th class="rowNumber" style="font-weight: bold; text-align: right;">Row</th><th style="text-align: left;">comparison</th><th style="text-align: left;">lower</th><th style="text-align: left;">observed</th><th style="text-align: left;">upper</th></tr><tr class="subheader headerLastRow"><th class="rowNumber" style="font-weight: bold; text-align: right;"></th><th title="Any" style="text-align: left;">Any</th><th title="Any" style="text-align: left;">Any</th><th title="Any" style="text-align: left;">Any</th><th title="Any" style="text-align: left;">Any</th></tr></thead><tbody><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">1</td><td style="text-align: left;">1_vs_2</td><td style="text-align: left;">-0.183111</td><td style="text-align: left;">-0.0644251</td><td style="text-align: left;">0.0542613</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">2</td><td style="text-align: left;">1_vs_3</td><td style="text-align: left;">-0.107666</td><td style="text-align: left;">-0.0228348</td><td style="text-align: left;">0.0619966</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">3</td><td style="text-align: left;">1_vs_4</td><td style="text-align: left;">-0.137547</td><td style="text-align: left;">-0.0392121</td><td style="text-align: left;">0.0591223</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">4</td><td style="text-align: left;">1_vs_5</td><td style="text-align: left;">-0.0517339</td><td style="text-align: left;">0.0496967</td><td style="text-align: left;">0.151127</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">5</td><td style="text-align: left;">1_vs_6</td><td style="text-align: left;">-0.0705754</td><td style="text-align: left;">0.0106686</td><td style="text-align: left;">0.0919126</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">6</td><td style="text-align: left;">1_vs_7</td><td style="text-align: left;">-0.0546606</td><td style="text-align: left;">0.0256699</td><td style="text-align: left;">0.106</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">7</td><td style="text-align: left;">1_vs_8</td><td style="text-align: left;">-0.0534846</td><td style="text-align: left;">0.0905882</td><td style="text-align: left;">0.234661</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">8</td><td style="text-align: left;">1_vs_9</td><td style="text-align: left;">-0.0529058</td><td style="text-align: left;">0.116602</td><td style="text-align: left;">0.28611</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">9</td><td style="text-align: left;">1_vs_10</td><td style="text-align: left;">-0.203392</td><td style="text-align: left;">-0.0682465</td><td style="text-align: left;">0.0668988</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">10</td><td style="text-align: left;">2_vs_1</td><td style="text-align: left;">-0.0542613</td><td style="text-align: left;">0.0644251</td><td style="text-align: left;">0.183111</td></tr></tbody></table></div>
+<pre><code>extract_all_rstats (generic function with 1 method)</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>sim_N <span class="op">=</span> <span class="fu">run_simulation</span>(samples, N)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">first</span>(sim_N[<span class="fl">1</span>], <span class="fl">10</span>)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>CSV.<span class="fu">write</span>(<span class="st">"outputs/sim_N.csv"</span>, sim_N[<span class="fl">1</span>])</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="fu">histogram</span>(<span class="fu">extract_all_rstats</span>(sim_N[<span class="fl">2</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="18">
+<p><img src="simulation_files/figure-html/cell-18-output-1.svg" class="img-fluid"></p>
 </div>
 </div>
 </section>
-<section id="the-experiment-using-m" class="level2">
-<h2 class="anchored" data-anchor-id="the-experiment-using-m">The experiment using M</h2>
-<div class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>comparison <span class="op">=</span> []</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>lower <span class="op">=</span> []</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>observed <span class="op">=</span> []</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>upper <span class="op">=</span> []</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>size <span class="op">=</span> <span class="fl">10</span></span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>size</span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span>size</span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> i <span class="op">!=</span> j</span>
-<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>            <span class="co"># unpack what we'll need</span></span>
-<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>            s1 <span class="op">=</span> samples[i]</span>
-<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>            s2 <span class="op">=</span> samples[j]</span>
-<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>            m1 <span class="op">=</span> s1[<span class="st">"mean"</span>]</span>
-<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>            m2 <span class="op">=</span> s2[<span class="st">"mean"</span>]</span>
-<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>            sd1 <span class="op">=</span> s1[<span class="st">"sd"</span>]</span>
-<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>            sd2 <span class="op">=</span> s2[<span class="st">"sd"</span>]</span>
-<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>            </span>
-<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>            <span class="co"># note the comparison for the record</span></span>
-<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>            c <span class="op">=</span> <span class="fu">string</span>(i, <span class="st">"_vs_"</span>, j)</span>
-<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>            </span>
-<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>            <span class="co"># make the comparison to get the root stats</span></span>
-<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a>            r_stats <span class="op">=</span> <span class="fu">pairwise_comparison</span>(s1, s2, N)</span>
-<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a>            </span>
-<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a>            <span class="co"># compute the "outer se" of the comparison</span></span>
-<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a>            global_se <span class="op">=</span> <span class="fu">standard_error</span>(sd1, sd2, M)</span>
-<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-32"><a href="#cb25-32" aria-hidden="true" tabindex="-1"></a>            <span class="co"># get the d statistic</span></span>
-<span id="cb25-33"><a href="#cb25-33" aria-hidden="true" tabindex="-1"></a>            d <span class="op">=</span> <span class="fu">quantile</span>(r_stats, <span class="fl">1</span><span class="op">-</span><span class="fl">0.05</span>)</span>
-<span id="cb25-34"><a href="#cb25-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-35"><a href="#cb25-35" aria-hidden="true" tabindex="-1"></a>            l <span class="op">=</span> (m1 <span class="op">-</span> m2) <span class="op">-</span> (d <span class="op">*</span> global_se)</span>
-<span id="cb25-36"><a href="#cb25-36" aria-hidden="true" tabindex="-1"></a>            o <span class="op">=</span> (m1 <span class="op">-</span> m2)</span>
-<span id="cb25-37"><a href="#cb25-37" aria-hidden="true" tabindex="-1"></a>            u <span class="op">=</span> (m1 <span class="op">-</span> m2) <span class="op">+</span> (d <span class="op">*</span> global_se)</span>
-<span id="cb25-38"><a href="#cb25-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-39"><a href="#cb25-39" aria-hidden="true" tabindex="-1"></a>            <span class="fu">push!</span>(comparison, c )</span>
-<span id="cb25-40"><a href="#cb25-40" aria-hidden="true" tabindex="-1"></a>            <span class="fu">push!</span>(lower, l)</span>
-<span id="cb25-41"><a href="#cb25-41" aria-hidden="true" tabindex="-1"></a>            <span class="fu">push!</span>(observed, o)</span>
-<span id="cb25-42"><a href="#cb25-42" aria-hidden="true" tabindex="-1"></a>            <span class="fu">push!</span>(upper, u)</span>
-<span id="cb25-43"><a href="#cb25-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-44"><a href="#cb25-44" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
-<span id="cb25-45"><a href="#cb25-45" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb25-46"><a href="#cb25-46" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
-<span id="cb25-47"><a href="#cb25-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-48"><a href="#cb25-48" aria-hidden="true" tabindex="-1"></a>df_M <span class="op">=</span> <span class="fu">DataFrame</span>(</span>
-<span id="cb25-49"><a href="#cb25-49" aria-hidden="true" tabindex="-1"></a>    comparison <span class="op">=</span> comparison,</span>
-<span id="cb25-50"><a href="#cb25-50" aria-hidden="true" tabindex="-1"></a>    lower <span class="op">=</span> lower, </span>
-<span id="cb25-51"><a href="#cb25-51" aria-hidden="true" tabindex="-1"></a>    observed <span class="op">=</span> observed,</span>
-<span id="cb25-52"><a href="#cb25-52" aria-hidden="true" tabindex="-1"></a>    upper <span class="op">=</span> upper</span>
-<span id="cb25-53"><a href="#cb25-53" aria-hidden="true" tabindex="-1"></a>);</span>
-<span id="cb25-54"><a href="#cb25-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-55"><a href="#cb25-55" aria-hidden="true" tabindex="-1"></a><span class="fu">first</span>(df_N, <span class="fl">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="18">
-
-<div><div style="float: left;"><span>10×4 DataFrame</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;"><table class="data-frame table table-sm table-striped" style="margin-bottom: 6px;"><thead><tr class="header"><th class="rowNumber" style="font-weight: bold; text-align: right;">Row</th><th style="text-align: left;">comparison</th><th style="text-align: left;">lower</th><th style="text-align: left;">observed</th><th style="text-align: left;">upper</th></tr><tr class="subheader headerLastRow"><th class="rowNumber" style="font-weight: bold; text-align: right;"></th><th title="Any" style="text-align: left;">Any</th><th title="Any" style="text-align: left;">Any</th><th title="Any" style="text-align: left;">Any</th><th title="Any" style="text-align: left;">Any</th></tr></thead><tbody><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">1</td><td style="text-align: left;">1_vs_2</td><td style="text-align: left;">-0.183111</td><td style="text-align: left;">-0.0644251</td><td style="text-align: left;">0.0542613</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">2</td><td style="text-align: left;">1_vs_3</td><td style="text-align: left;">-0.107666</td><td style="text-align: left;">-0.0228348</td><td style="text-align: left;">0.0619966</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">3</td><td style="text-align: left;">1_vs_4</td><td style="text-align: left;">-0.137547</td><td style="text-align: left;">-0.0392121</td><td style="text-align: left;">0.0591223</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">4</td><td style="text-align: left;">1_vs_5</td><td style="text-align: left;">-0.0517339</td><td style="text-align: left;">0.0496967</td><td style="text-align: left;">0.151127</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">5</td><td style="text-align: left;">1_vs_6</td><td style="text-align: left;">-0.0705754</td><td style="text-align: left;">0.0106686</td><td style="text-align: left;">0.0919126</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">6</td><td style="text-align: left;">1_vs_7</td><td style="text-align: left;">-0.0546606</td><td style="text-align: left;">0.0256699</td><td style="text-align: left;">0.106</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">7</td><td style="text-align: left;">1_vs_8</td><td style="text-align: left;">-0.0534846</td><td style="text-align: left;">0.0905882</td><td style="text-align: left;">0.234661</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">8</td><td style="text-align: left;">1_vs_9</td><td style="text-align: left;">-0.0529058</td><td style="text-align: left;">0.116602</td><td style="text-align: left;">0.28611</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">9</td><td style="text-align: left;">1_vs_10</td><td style="text-align: left;">-0.203392</td><td style="text-align: left;">-0.0682465</td><td style="text-align: left;">0.0668988</td></tr><tr><td class="rowNumber" style="font-weight: bold; text-align: right;">10</td><td style="text-align: left;">2_vs_1</td><td style="text-align: left;">-0.0542613</td><td style="text-align: left;">0.0644251</td><td style="text-align: left;">0.183111</td></tr></tbody></table></div>
+<section id="using-k" class="level3">
+<h3 class="anchored" data-anchor-id="using-k">Using K</h3>
+<div class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>sim_K <span class="op">=</span> <span class="fu">run_simulation</span>(samples, K)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">first</span>(sim_K[<span class="fl">1</span>], <span class="fl">10</span>)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>CSV.<span class="fu">write</span>(<span class="st">"outputs/sim_K.csv"</span>, sim_K[<span class="fl">1</span>])</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="fu">histogram</span>(<span class="fu">extract_all_rstats</span>(sim_K[<span class="fl">2</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="19">
+<p><img src="simulation_files/figure-html/cell-19-output-1.svg" class="img-fluid"></p>
 </div>
 </div>
+</section>
+<section id="using-m" class="level3">
+<h3 class="anchored" data-anchor-id="using-m">Using M</h3>
+<div class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>sim_M <span class="op">=</span> <span class="fu">run_simulation</span>(samples, M)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">first</span>(sim_M[<span class="fl">1</span>], <span class="fl">10</span>)</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>CSV.<span class="fu">write</span>(<span class="st">"outputs/sim_M.csv"</span>, sim_M[<span class="fl">1</span>])</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="fu">histogram</span>(<span class="fu">extract_all_rstats</span>(sim_M[<span class="fl">2</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="20">
+<p><img src="simulation_files/figure-html/cell-20-output-1.svg" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"End..."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>End...</code></pre>
+</div>
+</div>
+<p>Can I just slurp out all the Rs and make a histogram for each one? They’re the same distribution</p>
+</section>
 </section>
 
 </main>

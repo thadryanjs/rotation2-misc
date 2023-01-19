@@ -5,6 +5,7 @@ using Random
 using Distributions
 using Plots
 using DataFrames
+using CSV
 ```
 
 ## Definitions
@@ -29,7 +30,7 @@ using DataFrames
 Random.seed!(8675309)
 
 N = 1000
-K = 10
+K = Int(N/10)
 M = Int(N/K)
 
 println("N: ", N, ", K: ", K, ", M:", M)
@@ -254,7 +255,7 @@ function run_simulation(samples, Z)
     observed = []
     upper = []
 
-    r_stats_dict= Dict()
+    r_stats_dict = Dict()
 
     for i in 1:length(samples)
         for j in 1:length(samples)
@@ -312,14 +313,51 @@ function run_simulation(samples, Z)
 end
 ```
 
+```{julia}
+
+sim_N = run_simulation(samples, N)
+
+nrow(sim_N[1])
+
+df = sim_N[1]
+
+first(df, 5)
+```
+
 
 ### Using N
+
+```{julia}
+
+function extract_all_rstats(d)
+    
+    r_stats = []
+
+    for (k, v) in d
+        for i in v
+            push!(r_stats, i)
+        end
+    end
+
+    r_stats
+
+end
+
+```
 
 ```{julia}
 
 sim_N = run_simulation(samples, N)
 
 first(sim_N[1], 10)
+
+CSV.write("outputs/sim_N.csv", sim_N[1])
+
+histogram(extract_all_rstats(sim_N[2]))
+```
+
+```{julia}
+nrow(sim_N[1])
 ```
 
 ### Using K
@@ -329,7 +367,12 @@ first(sim_N[1], 10)
 sim_K = run_simulation(samples, K)
 
 first(sim_K[1], 10)
+
+CSV.write("outputs/sim_K.csv", sim_K[1])
+
+histogram(extract_all_rstats(sim_K[2]))
 ```
+
 
 ### Using M
 
@@ -338,6 +381,10 @@ first(sim_K[1], 10)
 sim_M = run_simulation(samples, M)
 
 first(sim_M[1], 10)
+
+CSV.write("outputs/sim_M.csv", sim_M[1])
+
+histogram(extract_all_rstats(sim_M[2]))
 ```
 
 
