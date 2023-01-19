@@ -29,11 +29,17 @@ using CSV
 
 Random.seed!(8675309)
 
-N = 1000
+# observations per sample
+N = 100
+# number of batches
 K = Int(N/10)
+# oberservations per batch
 M = Int(N/K)
 
-println("N: ", N, ", K: ", K, ", M:", M)
+# number of samples
+samples_per_experiment = 1000
+
+println("\nN: ", N, "\nK: ", K, "\nM: ", M)
 ```
 
 The log-normal distribution:
@@ -91,15 +97,16 @@ end
 ## Simulation Functions
 
 ```{julia}
-
+# create a sample of log-normal data
 function generate_sample(mu, sd, N)
-
+    # a function to exp every number of a vector
     exp_vector(vec) = [exp(i) for i in vec]
 
     exp_vector(rand(Normal(mu, sd), N))
 
 end
 
+# a test sample
 samples = [generate_sample(2, 0.5, N) for i in 1:2]
 
 histogram(samples[1])
@@ -148,6 +155,13 @@ end
 
 sample1 = get_batch_info(samples[1], "sample1", K)
 ```
+
+
+```{julia}
+
+# println(length(sample1["bootstrap_means"]))
+```
+
 
 Now we have a dictionary containing the information about a samples we need to compare it to another. We will get another sample to compare it to.
 
@@ -233,10 +247,9 @@ println("high ", (m1 - m2) + (d * global_se) )
 
 ```{julia}
 
-samples_per_experiment = 1000
 samples = []
 
-for i in 1:100
+for i in 1:samples_per_experiment
     s = generate_sample(2, 0.5, N)
     sr = get_batch_info(s, string("sample", i), K)
     push!(samples, sr)
@@ -261,6 +274,13 @@ function run_simulation(samples, Z)
         for j in 1:length(samples)
             if i != j
 
+                # note the comparison for the record
+                c = string(i, "_vs_", j)
+                
+                if string(j, "_vs_", i) in comparison
+                    continue
+                end
+
                 # unpack what we'll need
                 s1 = samples[i]
                 s2 = samples[j]
@@ -271,8 +291,6 @@ function run_simulation(samples, Z)
                 sd1 = s1["sd"]
                 sd2 = s2["sd"]
                 
-                # note the comparison for the record
-                c = string(i, "_vs_", j)
                 
                 # make the comparison to get the root stats
                 r_stats = pairwise_comparison(s1, s2, Z)
@@ -311,6 +329,32 @@ function run_simulation(samples, Z)
     )
 
 end
+```
+
+```{julia}
+
+test = []
+for i in 1:10
+    for j in 1:10
+        if i != j
+            c = string(i, "_vs_", j)
+            if string(j, "_vs_", i) in test
+                continue
+            end
+            push!(test, c)
+        end
+    end
+end
+length(test)
+for i in test
+    println(i)
+end
+```
+
+```{julia}
+x = [1,2,3]
+
+!(5 in x)
 ```
 
 ```{julia}
@@ -373,6 +417,12 @@ CSV.write("outputs/sim_K.csv", sim_K[1])
 histogram(extract_all_rstats(sim_K[2]))
 ```
 
+```{julia}
+d = sim_K[2]
+
+values(d)
+```
+
 
 ### Using M
 
@@ -384,7 +434,7 @@ first(sim_M[1], 10)
 
 CSV.write("outputs/sim_M.csv", sim_M[1])
 
-histogram(extract_all_rstats(sim_M[2]))
+length(extract_all_rstats(sim_M[2]))
 ```
 
 
