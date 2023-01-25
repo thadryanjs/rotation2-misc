@@ -138,22 +138,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Random</span>.<span class="fu">seed!</span>(<span class="fl">8675309</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># observations per sample</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> <span class="fl">50000</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> <span class="fl">100000</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># number of batches</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>B <span class="op">=</span> <span class="fu">Int</span>(N<span class="op">/</span><span class="fl">10</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>B <span class="op">=</span> <span class="fu">Int</span>(N<span class="op">/</span><span class="fl">100</span>)</span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># observations per batch</span></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>K <span class="op">=</span> <span class="fu">Int</span>(N<span class="op">/</span>B)</span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># number of samples</span></span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>samples_per_experiment <span class="op">=</span> <span class="fl">17</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">### I have gotten away with this before</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">N: "</span>, N, <span class="st">"</span><span class="sc">\n</span><span class="st">B: "</span>, B, <span class="st">"</span><span class="sc">\n</span><span class="st">K: "</span>, K)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(samples_per_experiment, <span class="st">" samples per population"</span>)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(N, <span class="st">" observations per sample (N)"</span>)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(B, <span class="st">" batches per subpopulation/bootstrap (B)"</span>)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(K, <span class="st">" observations per batch (K)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>
-N: 50000
-B: 5000
-K: 10</code></pre>
+<pre><code>17 samples per population
+100000 observations per sample (N)
+1000 batches per subpopulation/bootstrap (B)
+100 observations per batch (K)</code></pre>
 </div>
 </div>
 </section>
@@ -168,7 +170,7 @@ K: 10</code></pre>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">standard_error</span>(sd1, sd2, N)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sqrt</span>( ( (sd1<span class="op">^</span><span class="fl">2</span>) <span class="op">+</span> (sd2<span class="op">^</span><span class="fl">2</span>) ) <span class="op">*</span> (N<span class="op">^-</span><span class="fl">1</span>) )</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="194">
+<div class="cell-output cell-output-display" data-execution_count="4">
 <pre><code>standard_error (generic function with 1 method)</code></pre>
 </div>
 </div>
@@ -181,7 +183,7 @@ K: 10</code></pre>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">standard_error_boot</span>(sd1, sd2, Z)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sqrt</span>( ( (sd1<span class="op">^</span><span class="fl">2</span>) <span class="op">+</span> (sd2<span class="op">^</span><span class="fl">2</span>) ) <span class="op">*</span> (Z<span class="op">^-</span><span class="fl">1</span>) )</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="195">
+<div class="cell-output cell-output-display" data-execution_count="5">
 <pre><code>standard_error_boot (generic function with 1 method)</code></pre>
 </div>
 </div>
@@ -193,7 +195,7 @@ K: 10</code></pre>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">calc_root_stat</span>(m1, m1b, m2, m2b, se)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">abs</span>( ( (m1b <span class="op">-</span> m2b) <span class="op">-</span> (m1 <span class="op">-</span> m2) ) <span class="op">/</span>se )</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="196">
+<div class="cell-output cell-output-display" data-execution_count="6">
 <pre><code>calc_root_stat (generic function with 1 method)</code></pre>
 </div>
 </div>
@@ -210,7 +212,7 @@ K: 10</code></pre>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>samples <span class="op">=</span> [<span class="fu">generate_sample</span>(<span class="fl">2</span>, <span class="fl">0.5</span>, N) for i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>]</span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">histogram</span>(samples[<span class="fl">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="197">
+<div class="cell-output cell-output-display" data-execution_count="7">
 <p><img src="simulation_files/figure-html/cell-7-output-1.svg" class="img-fluid"></p>
 </div>
 </div>
@@ -254,25 +256,25 @@ K: 10</code></pre>
 <span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
 <span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a>sample1 <span class="op">=</span> <span class="fu">get_batch_info</span>(samples[<span class="fl">1</span>], <span class="st">"sample1"</span>, K)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="198">
+<div class="cell-output cell-output-display" data-execution_count="8">
 <pre><code>Dict{String, Any} with 5 entries:
   "name"            =&gt; "sample1"
-  "bootstrap_sds"   =&gt; Any[0.341829, 0.367869, 0.455667, 0.396848, 0.461297, 0.…
-  "bootstrap_means" =&gt; Any[2.10823, 1.87763, 1.98568, 2.02214, 1.88597, 2.12836…
-  "mean"            =&gt; 2.00095
-  "sd"              =&gt; 0.499284</code></pre>
+  "bootstrap_sds"   =&gt; Any[0.488934, 0.550293, 0.447174, 0.524947, 0.472793, 0.…
+  "bootstrap_means" =&gt; Any[1.9966, 1.97505, 2.01797, 1.98368, 2.02569, 2.06118,…
+  "mean"            =&gt; 1.9988
+  "sd"              =&gt; 0.498694</code></pre>
 </div>
 </div>
 <p>Now we have a dictionary containing the information about a samples we need to compare it to another. We will get another sample to compare it to.</p>
 <div class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>sample2 <span class="op">=</span> <span class="fu">get_batch_info</span>(samples[<span class="fl">2</span>], <span class="st">"sample2"</span>, K)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="199">
+<div class="cell-output cell-output-display" data-execution_count="9">
 <pre><code>Dict{String, Any} with 5 entries:
   "name"            =&gt; "sample2"
-  "bootstrap_sds"   =&gt; Any[0.463357, 0.420533, 0.468092, 0.490911, 0.389868, 0.…
-  "bootstrap_means" =&gt; Any[2.08961, 1.96211, 1.96684, 2.24503, 1.80204, 2.37532…
-  "mean"            =&gt; 1.99664
-  "sd"              =&gt; 0.498098</code></pre>
+  "bootstrap_sds"   =&gt; Any[0.494246, 0.485047, 0.558406, 0.485354, 0.500619, 0.…
+  "bootstrap_means" =&gt; Any[1.97814, 2.03653, 1.95124, 2.008, 1.98269, 1.97063, …
+  "mean"            =&gt; 2.00125
+  "sd"              =&gt; 0.49919</code></pre>
 </div>
 </div>
 </section>
@@ -308,14 +310,14 @@ K: 10</code></pre>
 <span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">maximum</span>(R_stats)</span>
 <span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="200">
+<div class="cell-output cell-output-display" data-execution_count="10">
 <pre><code>pairwise_comparison (generic function with 1 method)</code></pre>
 </div>
 </div>
 <div class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>R_stat_N <span class="op">=</span> <span class="fu">pairwise_comparison</span>(sample1, sample2, N)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="201">
-<pre><code>104.9772872176942</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<pre><code>100.146708375268</code></pre>
 </div>
 </div>
 </section>
@@ -337,11 +339,11 @@ K: 10</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>Number of samples: 17</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="202">
+<div class="cell-output cell-output-display" data-execution_count="12">
 <pre><code>3-element Vector{Any}:
- Dict{String, Any}("name" =&gt; "sample1", "bootstrap_sds" =&gt; Any[0.4346793019523038, 0.3539023328912247, 0.41509063309628397, 0.4055195564450011, 0.42719067967251156, 0.5647605394363716, 0.566955070684707, 0.6852406200886942, 0.5483962464449688, 0.4329440453726863  …  0.5472473194847453, 0.6244573421034038, 0.4533713685881498, 0.5812982932255589, 0.3814948347572382, 0.3808214867193648, 0.5221110637335064, 0.5544591442969301, 0.44525797319727306, 0.512988179732829], "bootstrap_means" =&gt; Any[1.8395975848510222, 1.8009762818509902, 2.027406207041359, 2.059701177392381, 2.247626859673119, 2.1568762015386342, 2.0688210777778417, 1.7807414746298857, 1.8438223370530271, 1.955862186788854  …  1.8676308969049522, 2.0233314723020808, 1.8928041193789613, 2.0879735489340767, 2.153996819060155, 1.9086102616478158, 1.9242848612514756, 2.03866712816079, 2.2132949162928077, 2.046103862434619], "mean" =&gt; 2.004553180737198, "sd" =&gt; 0.49839889107634483)
- Dict{String, Any}("name" =&gt; "sample2", "bootstrap_sds" =&gt; Any[0.3336841846320429, 0.4779536418222408, 0.3689051322678922, 0.3994959814772311, 0.6654602560192984, 0.3580787337973413, 0.5113339510205926, 0.6710217113459997, 0.598569813473532, 0.42134429734475276  …  0.4799790050557687, 0.6326329434534841, 0.35245193652070683, 0.5176477631606465, 0.5708869509337882, 0.6942111708711417, 0.4952375653717117, 0.48030204880107025, 0.5600294967469246, 0.5314001308934065], "bootstrap_means" =&gt; Any[1.8092362242779205, 2.0315940715825143, 1.9565057028419062, 2.084219966661706, 2.04748817308343, 2.1887688298823913, 1.772538116388215, 2.100395688082917, 1.6692552298004262, 2.0230649234168108  …  1.7799650852254367, 1.9579158349332748, 2.249413733214472, 2.052928737774235, 2.0386735284362865, 1.9200648981418103, 1.818679417091704, 1.713796761518897, 2.2325376926940086, 1.8315338764246705], "mean" =&gt; 1.9979558410422964, "sd" =&gt; 0.4999621164728928)
- Dict{String, Any}("name" =&gt; "sample3", "bootstrap_sds" =&gt; Any[0.7359947069996976, 0.43495476851438, 0.5084859271455678, 0.5280013491208507, 0.474680563486671, 0.3535158485077455, 0.6646378587040547, 0.400584015686552, 0.5437614999705204, 0.37408312109211295  …  0.5294281417141291, 0.3488453119139482, 0.5010554163821184, 0.2380379135881851, 0.3176996721939695, 0.4378806797688, 0.24370903814960934, 0.5534859261873987, 0.627698598123397, 0.5815180465222972], "bootstrap_means" =&gt; Any[2.0062073284938853, 2.037672180406118, 1.9695634545316985, 2.102943236196203, 1.6019597033055462, 1.8094033769055085, 1.9296721645235966, 1.9887453780903974, 2.077372083231979, 1.8338624010342923  …  2.1437742196308767, 1.7286521086372333, 1.8402427899023883, 1.8551507622093855, 1.8662976764261525, 1.904864374476901, 1.7757271271165174, 2.184179148207364, 1.9028280474359431, 1.9466949213838007], "mean" =&gt; 2.0018326845792274, "sd" =&gt; 0.5019851966321233)</code></pre>
+ Dict{String, Any}("name" =&gt; "sample1", "bootstrap_sds" =&gt; Any[0.5120582711691188, 0.46589152722317934, 0.5231231363704707, 0.5370802482744412, 0.5212384843742974, 0.49991615178649, 0.49374746140630943, 0.49573520994594406, 0.4937870270802542, 0.4325621165762691  …  0.5417532298284111, 0.4820167873469936, 0.4604339004033621, 0.4444171087536868, 0.4473250911959609, 0.5636173001792437, 0.5234249052307217, 0.4536977837270571, 0.5058105081662801, 0.4980411594666947], "bootstrap_means" =&gt; Any[1.9357401306719222, 2.036205243173006, 1.9755901392523305, 1.9425437589461876, 1.9709020314281478, 2.1029109402244694, 2.0691995924647664, 1.9479975717647022, 2.003015905468987, 1.9990860063743006  …  1.9725374586366107, 2.026053123238343, 2.0110880789515826, 1.983501466365479, 2.0247580398873257, 1.9061445292563592, 1.9860436208137517, 2.0657595344414936, 1.990326426466182, 2.045054621182336], "mean" =&gt; 2.0015252479217738, "sd" =&gt; 0.5010238839758855)
+ Dict{String, Any}("name" =&gt; "sample2", "bootstrap_sds" =&gt; Any[0.5573549806399314, 0.5104837712354791, 0.46143749175514753, 0.5147496519514394, 0.5283116728157523, 0.5021905881764003, 0.4923850413047467, 0.5035439963883661, 0.43955562798706616, 0.4835005583775651  …  0.5155850434198268, 0.43847412258691054, 0.4932895123030458, 0.5560676733516644, 0.46639386260870985, 0.5267827456522638, 0.513693054628595, 0.5121015442718326, 0.4336268404876216, 0.4868779401271261], "bootstrap_means" =&gt; Any[2.068051815937618, 2.016585915364614, 2.0588071666993475, 2.024012286158593, 1.993748613760646, 2.0129381939492, 2.0327642063156177, 1.9990331259573761, 2.0045595485674284, 2.0578087857370533  …  1.9448421389211583, 2.0573799269287067, 2.024067910238552, 1.9939013593626078, 1.8933383512438526, 1.9973761999162118, 1.9990984641964662, 1.982402957696114, 1.956431786257869, 2.1035315820684364], "mean" =&gt; 2.0018308082002823, "sd" =&gt; 0.49937454685818505)
+ Dict{String, Any}("name" =&gt; "sample3", "bootstrap_sds" =&gt; Any[0.49109117443356337, 0.5146084352787086, 0.45305662415701564, 0.518371651071608, 0.4761319399474734, 0.5216675759615291, 0.5085399496037948, 0.4598695802816986, 0.4802366199741313, 0.521617337086727  …  0.49079894544950076, 0.532306701924554, 0.48333217942435314, 0.5354619381360444, 0.5023203267962757, 0.5170411473662847, 0.4864535975843731, 0.5568573692085578, 0.4898293822741593, 0.4623174500482746], "bootstrap_means" =&gt; Any[1.9129720691085677, 2.0098590084074672, 1.9353896573715879, 1.960675268935112, 2.1109095676147374, 1.9957244500405695, 1.988428991004854, 2.0676866702651777, 1.9728774288035682, 1.9441749023061445  …  2.0154738568916266, 2.06295022888692, 2.013815460497577, 2.057376350442578, 2.0131128837979846, 1.9926197570671682, 2.0567341124986114, 1.9532776802826595, 1.9826391879506784, 1.972689090953257], "mean" =&gt; 1.9972541552746559, "sd" =&gt; 0.49857691887512817)</code></pre>
 </div>
 </div>
 <div class="cell" data-execution_count="12">
@@ -372,88 +374,105 @@ K: 10</code></pre>
 <span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>                sd1 <span class="op">=</span> s1[<span class="st">"sd"</span>]</span>
 <span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>                sd2 <span class="op">=</span> s2[<span class="st">"sd"</span>]</span>
-<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>                </span>
-<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a>                </span>
-<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a>                <span class="co"># make the comparison to get the root stats</span></span>
-<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a>                r_stats <span class="op">=</span> <span class="fu">pairwise_comparison</span>(s1, s2, Z)</span>
-<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-33"><a href="#cb22-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-34"><a href="#cb22-34" aria-hidden="true" tabindex="-1"></a>                r_stats_dict[c] <span class="op">=</span> (r_stats, m1, m2)</span>
-<span id="cb22-35"><a href="#cb22-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-36"><a href="#cb22-36" aria-hidden="true" tabindex="-1"></a>            <span class="cf">end</span></span>
-<span id="cb22-37"><a href="#cb22-37" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
-<span id="cb22-38"><a href="#cb22-38" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb22-39"><a href="#cb22-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-40"><a href="#cb22-40" aria-hidden="true" tabindex="-1"></a>    r_stats_dict</span>
-<span id="cb22-41"><a href="#cb22-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-42"><a href="#cb22-42" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="203">
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a>                <span class="co"># dev: inefficient but usable for this quick refactor</span></span>
+<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a>                <span class="co"># return the r stat and the other things we will need</span></span>
+<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a>                r_stats_dict[c] <span class="op">=</span> <span class="fu">Dict</span>(</span>
+<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"r_stat"</span> <span class="op">=&gt;</span> <span class="fu">pairwise_comparison</span>(s1, s2, Z),</span>
+<span id="cb22-33"><a href="#cb22-33" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"m1"</span> <span class="op">=&gt;</span> m1,</span>
+<span id="cb22-34"><a href="#cb22-34" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"m2"</span> <span class="op">=&gt;</span> m2,</span>
+<span id="cb22-35"><a href="#cb22-35" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"sd1"</span> <span class="op">=&gt;</span> sd1,</span>
+<span id="cb22-36"><a href="#cb22-36" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"sd2"</span> <span class="op">=&gt;</span> sd2</span>
+<span id="cb22-37"><a href="#cb22-37" aria-hidden="true" tabindex="-1"></a>                )</span>
+<span id="cb22-38"><a href="#cb22-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-39"><a href="#cb22-39" aria-hidden="true" tabindex="-1"></a>            <span class="cf">end</span></span>
+<span id="cb22-40"><a href="#cb22-40" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
+<span id="cb22-41"><a href="#cb22-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb22-42"><a href="#cb22-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-43"><a href="#cb22-43" aria-hidden="true" tabindex="-1"></a>    r_stats_dict</span>
+<span id="cb22-44"><a href="#cb22-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-45"><a href="#cb22-45" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="13">
 <pre><code>run_simulation (generic function with 1 method)</code></pre>
 </div>
 </div>
+<p>What about the confidence intervals for each comparison in this simulation?</p>
 <div class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">get_r_stats</span>(o) <span class="op">=</span> [v[<span class="fl">1</span>] for (k,v) <span class="kw">in</span> o]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="204">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># this takes the comparison records and adds</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">computeCIs!</span>(o, alpha, N)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    r_stats <span class="op">=</span> [v[<span class="st">"r_stat"</span>] for (k,v) <span class="kw">in</span> o]</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (k,v) <span class="kw">in</span> o</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>        m1 <span class="op">=</span> v[<span class="st">"m1"</span>]</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>        m2 <span class="op">=</span> v[<span class="st">"m2"</span>]</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>        sd1 <span class="op">=</span> v[<span class="st">"sd1"</span>]</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>        sd2 <span class="op">=</span> v[<span class="st">"sd2"</span>]</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>        d <span class="op">=</span> <span class="fu">quantile</span>(r_stats, (<span class="fl">1</span><span class="op">-</span>alpha))</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>        se <span class="op">=</span> <span class="fu">standard_error</span>(sd1, sd2, N)</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>        v[<span class="st">"low"</span>] <span class="op">=</span> (m1 <span class="op">-</span> m2) <span class="op">-</span> (d <span class="op">*</span> se)</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>        v[<span class="st">"obs"</span>] <span class="op">=</span> (m1 <span class="op">-</span> m2)</span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>        v[<span class="st">"high"</span>] <span class="op">=</span> (m1 <span class="op">-</span> m2) <span class="op">+</span> (d <span class="op">*</span> se)</span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>    o</span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a><span class="co"># get the r stats for our experiment</span></span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a><span class="fu">get_r_stats</span>(o) <span class="op">=</span> [v[<span class="st">"r_stat"</span>] for (k,v) <span class="kw">in</span> o]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
 <pre><code>get_r_stats (generic function with 1 method)</code></pre>
-</div>
-</div>
-<div class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># function compute_CIs(rstats, alpha)</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co">#     d = quantile</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co">#     l = </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">computeCIs</span>()</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="206">
-<pre><code>computeCIs (generic function with 1 method)</code></pre>
 </div>
 </div>
 <section id="using-n" class="level3">
 <h3 class="anchored" data-anchor-id="using-n">Using N</h3>
-<div class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>sim_N <span class="op">=</span> <span class="fu">run_simulation</span>(samples, N)</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>r_stats_N <span class="op">=</span> <span class="fu">get_r_stats</span>(sim_N)</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>r_stats_N <span class="op">|&gt;</span> histogram</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="207">
-<p><img src="simulation_files/figure-html/cell-17-output-1.svg" class="img-fluid"></p>
+<div class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>sim_N <span class="op">=</span> <span class="fu">run_simulation</span>(samples, N)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>sim_N <span class="op">=</span> <span class="fu">computeCIs!</span>(sim_N, <span class="fl">0.05</span>, N)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>r_stats_N <span class="op">=</span> <span class="fu">get_r_stats</span>(sim_N)</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>r_stats_N <span class="op">|&gt;</span> histogram</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<p><img src="simulation_files/figure-html/cell-15-output-1.svg" class="img-fluid"></p>
 </div>
 </div>
 </section>
 <section id="using-k" class="level3">
 <h3 class="anchored" data-anchor-id="using-k">Using K</h3>
-<div class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>sim_K <span class="op">=</span> <span class="fu">run_simulation</span>(samples, K)</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>r_stats_L <span class="op">=</span> <span class="fu">get_r_stats</span>(sim_K)</span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>r_stats_L <span class="op">|&gt;</span> histogram</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="208">
-<p><img src="simulation_files/figure-html/cell-18-output-1.svg" class="img-fluid"></p>
+<div class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>sim_K <span class="op">=</span> <span class="fu">run_simulation</span>(samples, K)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>sim_K <span class="op">=</span> <span class="fu">computeCIs!</span>(sim_K, <span class="fl">0.05</span>, N)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>r_stats_K <span class="op">=</span> <span class="fu">get_r_stats</span>(sim_K)</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>r_stats_K <span class="op">|&gt;</span> histogram</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<p><img src="simulation_files/figure-html/cell-16-output-1.svg" class="img-fluid"></p>
 </div>
 </div>
-</section>
-<section id="note-that-the-z-were-using-is-n" class="level3">
-<h3 class="anchored" data-anchor-id="note-that-the-z-were-using-is-n">note that the Z we’re using is N</h3>
-<p>global_se = standard_error(sd1, sd2, N) # get the d statistic d = quantile(r_stats, 1-0.05) l = (m1 - m2) - (d * global_se) o = (m1 - m2) u = (m1 - m2) + (d * global_se)</p>
 </section>
 <section id="using-b" class="level3">
 <h3 class="anchored" data-anchor-id="using-b">Using B</h3>
-<div class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>sim_B <span class="op">=</span> <span class="fu">run_simulation</span>(samples, B)</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>r_stats_B <span class="op">=</span> <span class="fu">get_r_stats</span>(sim_B)</span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>r_stats_B <span class="op">|&gt;</span> histogram</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="209">
-<p><img src="simulation_files/figure-html/cell-19-output-1.svg" class="img-fluid"></p>
+<div class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>sim_B <span class="op">=</span> <span class="fu">run_simulation</span>(samples, N)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>sim_B <span class="op">=</span> <span class="fu">computeCIs!</span>(sim_N, <span class="fl">0.05</span>, N)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>r_stats_B <span class="op">=</span> <span class="fu">get_r_stats</span>(sim_N)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>r_stats_B <span class="op">|&gt;</span> histogram</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="17">
+<p><img src="simulation_files/figure-html/cell-17-output-1.svg" class="img-fluid"></p>
 </div>
 </div>
-<div class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"End..."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"End..."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>End...</code></pre>
 </div>
@@ -462,8 +481,7 @@ K: 10</code></pre>
 </section>
 <section id="todo" class="level1">
 <h1>TODO</h1>
-<pre><code>- Interrogate distributional properties of R stat
--  Get one R stat per test (largest j&gt;j')</code></pre>
+<pre><code>-  Get one R stat per test (largest j&gt;j')</code></pre>
 </section>
 
 </main>

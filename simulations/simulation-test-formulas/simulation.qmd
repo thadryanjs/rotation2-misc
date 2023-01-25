@@ -31,17 +31,19 @@ using CSV
 Random.seed!(8675309)
 
 # observations per sample
-N = 50000
+N = 100000
 # number of batches
-B = Int(N/10)
+B = Int(N/100)
 # observations per batch
 K = Int(N/B)
 
 # number of samples
 samples_per_experiment = 17
-### I have gotten away with this before
 
-println("\nN: ", N, "\nB: ", B, "\nK: ", K)
+println(samples_per_experiment, " samples per population")
+println(N, " observations per sample (N)")
+println(B, " batches per subpopulation/bootstrap (B)")
+println(K, " observations per batch (K)")
 ```
 
 ## Mathematical Functions
@@ -240,12 +242,9 @@ function run_simulation(samples, Z)
 
                 sd1 = s1["sd"]
                 sd2 = s2["sd"]
-                
-                
-                # make the comparison to get the root stats
-                
 
-
+                # dev: inefficient but usable for this quick refactor
+                # return the r stat and the other things we will need
                 r_stats_dict[c] = Dict(
                     "r_stat" => pairwise_comparison(s1, s2, Z),
                     "m1" => m1,
@@ -263,19 +262,36 @@ function run_simulation(samples, Z)
 end
 ```
 
+What about the confidence intervals for each comparison in this simulation?
 
 ```{julia}
 
-sim_N = run_simulation(samples, N)
+# this takes the comparison records and adds
+function computeCIs!(o, alpha, N)
 
+    r_stats = [v["r_stat"] for (k,v) in o]
+    
+    for (k,v) in o
+        
+        m1 = v["m1"]
+        m2 = v["m2"]
+        sd1 = v["sd1"]
+        sd2 = v["sd2"]
+
+        d = quantile(r_stats, (1-alpha))
+        se = standard_error(sd1, sd2, N)
+
+        v["low"] = (m1 - m2) - (d * se)
+        v["obs"] = (m1 - m2)
+        v["high"] = (m1 - m2) + (d * se)
+
+    end
+    o
+end
+
+# get the r stats for our experiment
+get_r_stats(o) = [v["r_stat"] for (k,v) in o]
 ```
-
-```{julia}
-# function compute_CIs(rstats, alpha)
-#     d = quantile
-#     l = 
-```
-
 
 ### Using N
 
@@ -284,33 +300,12 @@ sim_N = run_simulation(samples, N)
 
 sim_N = run_simulation(samples, N)
 
+sim_N = computeCIs!(sim_N, 0.05, N)
+
 r_stats_N = get_r_stats(sim_N)
 
 r_stats_N |> histogram
 ```
-
-
-What about the confidence intervals for each comparison in this simulation?
-
-```{julia}
-
-function computeCIs(o, alpha, se)
-
-    r_stats = [v[1] for (k,v) in o]
-
-    for (k,v) in o
-    
-        d = quantile(r_stats, 1-alpha)
-
-
-    end
-
-
-end
-
-computeCIs(sim_N)
-```
-
 
 ### Using K
 
@@ -318,26 +313,24 @@ computeCIs(sim_N)
 
 sim_K = run_simulation(samples, K)
 
-r_stats_L = get_r_stats(sim_K)
+sim_K = computeCIs!(sim_K, 0.05, N)
 
-r_stats_L |> histogram
+r_stats_K = get_r_stats(sim_K)
+
+r_stats_K |> histogram
 ```
 
-### note that the Z we're using is N
-global_se = standard_error(sd1, sd2, N)
-# get the d statistic
-d = quantile(r_stats, 1-0.05)
-l = (m1 - m2) - (d * global_se)
-o = (m1 - m2)
-u = (m1 - m2) + (d * global_se)
 
 ### Using B
 
+
 ```{julia}
 
-sim_B = run_simulation(samples, B)
+sim_B = run_simulation(samples, N)
 
-r_stats_B = get_r_stats(sim_B)
+sim_B = computeCIs!(sim_N, 0.05, N)
+
+r_stats_B = get_r_stats(sim_N)
 
 r_stats_B |> histogram
 ```
@@ -353,6 +346,4 @@ println("End...")
 
 
 # TODO
-
-    - Interrogate distributional properties of R stat
     -  Get one R stat per test (largest j>j')
