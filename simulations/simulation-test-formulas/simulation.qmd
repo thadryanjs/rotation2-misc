@@ -37,9 +37,9 @@ K = Int(N/10)
 M = Int(N/K)
 
 # number of samples
-# samples_per_experiment = 10
+samples_per_experiment = 10
 ### I have gotten away with this before
-samples_per_experiment = 250
+# samples_per_experiment = 250
 
 println("\nN: ", N, "\nK: ", K, "\nM: ", M)
 ```
@@ -427,3 +427,12 @@ println("End...")
 ```{julia}
 
 ```
+
+
+# TODO: 
+# - Switch to a normal distribution
+# - Fewer samples of longer vectors (max 17)
+# - Switch K and M, make M "B"
+# - Interrogate distributional properties of R stat
+# - Get one R stat per test (largest j>j')
+ 
