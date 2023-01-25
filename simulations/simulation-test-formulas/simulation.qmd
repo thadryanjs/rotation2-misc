@@ -4,6 +4,7 @@
 using Random
 using Distributions
 using Plots
+using PlotThemes; theme(:dracula)
 using DataFrames
 using CSV
 ```
@@ -11,8 +12,8 @@ using CSV
 ## Definitions
 
  - $N$:= numbers of observations per sample.
- - $K$:= number batches (can be thought of as number of bootstraps).
- - $M$:= number of observations per batch ($\frac{N}{K}$).
+ - $B$:= number batches (can be thought of as number of bootstraps).
+ - $K$:= number of observations per batch ($\frac{N}{K}$).
  - $\theta$:= mean of a sample.
  - $\theta^{b}$:= mean of a batch (bootstrap).
  - $\sigma$:= standard deviation of sample.
@@ -22,7 +23,7 @@ using CSV
  - $S_b$:= standard error use in the calculation of $R$ ("Inner SE").
  - $\alpha$:= significance level of a comparison.
  - $d$:= $1-\alpha$ quantile of a vector of $R$s.
- - $Z$:= $\in [N,M,K]$, factor to test the use of in the function.
+ - $Z$:= $\in [N,B,K]$, factor to test the use of in the function.
 
 
 ```{julia}
@@ -32,28 +33,17 @@ Random.seed!(8675309)
 # observations per sample
 N = 10000
 # number of batches
-K = Int(N/10)
+B = Int(N/10)
 # observations per batch
-M = Int(N/K)
+K = Int(N/B)
 
 # number of samples
 samples_per_experiment = 10
 ### I have gotten away with this before
 # samples_per_experiment = 250
 
-println("\nN: ", N, "\nK: ", K, "\nM: ", M)
+println("\nN: ", N, "\nB: ", B, "\nK: ", K)
 ```
-
-The log-normal distribution:
-
-$$
-X \sim Normal(\mu, \sigma)
-$$
-
-Then:
-$$
-exp(X) \sim LogNormal(\mu,\sigma)
-$$
 
 ## Mathematical Functions
 
@@ -64,7 +54,7 @@ These are the functions we're using for math calculations (as opposed to the pro
 The classical standard error.
 
 ```{julia}
-
+ 
 # compute the standard error
 function standard_error(sd1, sd2, N)
     sqrt( ( (sd1^2) + (sd2^2) ) * (N^-1) )
@@ -76,7 +66,7 @@ end
 The standard error modified for our tests
 
 ```{julia}
-
+ 
 # Z will be either N, M, K
 function standard_error_boot(sd1, sd2, Z)
     sqrt( ( (sd1^2) + (sd2^2) ) * (Z^-1) )
@@ -99,20 +89,17 @@ end
 ## Simulation Functions
 
 ```{julia}
+ 
 # create a sample of log-normal data
-function generate_sample(mu, sd, N)
-    # a function to exp every number of a vector
-    exp_vector(vec) = [exp(i) for i in vec]
-
-    exp_vector(rand(Normal(mu, sd), N))
-
-end
+generate_sample(mu, sd, N) = rand(Normal(mu, sd), N)
 
 # a test sample
 samples = [generate_sample(2, 0.5, N) for i in 1:2]
 
 histogram(samples[1])
 ```
+
+
 
 I will now write a separate function to get the information about sample needed to make a comparison.
 
@@ -133,16 +120,16 @@ function get_batch_info(sample, sample_name, K)
     # 201-300
     # etc
     i = 1
-    for x in 1:K
+    for x in 1:B
         # the upper limits, ie, 1-100
-        j = i  + (M-1)
+        j = i  + (K-1)
         batch = sample[i:j]
-        ### (debug) println("from ", i, " to ", j)
+        ### println("from ", i, " to ", j)
         # collect the figures
         push!(theta_boots, mean(batch))
         push!(sd_boots, std(batch))
         # increase by the batch size the set the next limit
-        i += M
+        i += K 
     end
     
     Dict(
@@ -158,11 +145,6 @@ end
 sample1 = get_batch_info(samples[1], "sample1", K)
 ```
 
-
-```{julia}
-
-# println(length(sample1["bootstrap_means"]))
-```
 
 
 Now we have a dictionary containing the information about a samples we need to compare it to another. We will get another sample to compare it to.
@@ -212,6 +194,8 @@ R_stats_N = pairwise_comparison(sample1, sample2, N)
 histogram(R_stats_N)
 ```
 
+
+
 ```{julia}
 
 R_stats_K = pairwise_comparison(sample1, sample2, K)
@@ -220,7 +204,7 @@ histogram(R_stats_K)
 
 ```{julia}
 
-R_stats_M = pairwise_comparison(sample1, sample2, M)
+R_stats_M = pairwise_comparison(sample1, sample2, B)
 histogram(R_stats_M)
 ```
 
@@ -404,19 +388,19 @@ histogram(all_r_K)
 ```
 
 
-### Using M
+### Using B
 
 ```{julia}
 
-sim_M = run_simulation(samples, M)
+sim_B = run_simulation(samples, B)
 
-CSV.write("outputs/sim_M.csv", sim_M[1])
+CSV.write("outputs/sim_M.csv", sim_B[1])
 
-all_r_M = extract_all_rstats(sim_M[2])
+all_r_B = extract_all_rstats(sim_B[2])
 
-println(length(all_r_M))
+println(length(all_r_B))
 
-histogram(all_r_M)
+histogram(all_r_B)
 ```
 
 
@@ -430,9 +414,6 @@ println("End...")
 
 
 # TODO: 
-# - Switch to a normal distribution
 # - Fewer samples of longer vectors (max 17)
-# - Switch K and M, make M "B"
 # - Interrogate distributional properties of R stat
-# - Get one R stat per test (largest j>j')
- 
+# - Get one R stat per test (largest j>j') 
