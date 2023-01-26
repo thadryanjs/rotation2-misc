@@ -170,7 +170,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">standard_error</span>(sd1, sd2, N)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sqrt</span>( ( (sd1<span class="op">^</span><span class="fl">2</span>) <span class="op">+</span> (sd2<span class="op">^</span><span class="fl">2</span>) ) <span class="op">*</span> (N<span class="op">^-</span><span class="fl">1</span>) )</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="4">
+<div class="cell-output cell-output-display" data-execution_count="238">
 <pre><code>standard_error (generic function with 1 method)</code></pre>
 </div>
 </div>
@@ -183,7 +183,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">standard_error_boot</span>(sd1, sd2, Z)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sqrt</span>( ( (sd1<span class="op">^</span><span class="fl">2</span>) <span class="op">+</span> (sd2<span class="op">^</span><span class="fl">2</span>) ) <span class="op">*</span> (Z<span class="op">^-</span><span class="fl">1</span>) )</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="5">
+<div class="cell-output cell-output-display" data-execution_count="239">
 <pre><code>standard_error_boot (generic function with 1 method)</code></pre>
 </div>
 </div>
@@ -195,7 +195,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">calc_root_stat</span>(m1, m1b, m2, m2b, se)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">abs</span>( ( (m1b <span class="op">-</span> m2b) <span class="op">-</span> (m1 <span class="op">-</span> m2) ) <span class="op">/</span>se )</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="6">
+<div class="cell-output cell-output-display" data-execution_count="240">
 <pre><code>calc_root_stat (generic function with 1 method)</code></pre>
 </div>
 </div>
@@ -212,7 +212,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>samples <span class="op">=</span> [<span class="fu">generate_sample</span>(<span class="fl">2</span>, <span class="fl">0.5</span>, N) for i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>]</span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">histogram</span>(samples[<span class="fl">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="7">
+<div class="cell-output cell-output-display" data-execution_count="241">
 <p><img src="simulation_files/figure-html/cell-7-output-1.svg" class="img-fluid"></p>
 </div>
 </div>
@@ -256,7 +256,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
 <span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a>sample1 <span class="op">=</span> <span class="fu">get_batch_info</span>(samples[<span class="fl">1</span>], <span class="st">"sample1"</span>, K)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="8">
+<div class="cell-output cell-output-display" data-execution_count="242">
 <pre><code>Dict{String, Any} with 5 entries:
   "name"            =&gt; "sample1"
   "bootstrap_sds"   =&gt; Any[0.488934, 0.550293, 0.447174, 0.524947, 0.472793, 0.…
@@ -268,7 +268,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Now we have a dictionary containing the information about a samples we need to compare it to another. We will get another sample to compare it to.</p>
 <div class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>sample2 <span class="op">=</span> <span class="fu">get_batch_info</span>(samples[<span class="fl">2</span>], <span class="st">"sample2"</span>, K)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="9">
+<div class="cell-output cell-output-display" data-execution_count="243">
 <pre><code>Dict{String, Any} with 5 entries:
   "name"            =&gt; "sample2"
   "bootstrap_sds"   =&gt; Any[0.494246, 0.485047, 0.558406, 0.485354, 0.500619, 0.…
@@ -310,13 +310,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">maximum</span>(R_stats)</span>
 <span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="10">
+<div class="cell-output cell-output-display" data-execution_count="244">
 <pre><code>pairwise_comparison (generic function with 1 method)</code></pre>
 </div>
 </div>
 <div class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>R_stat_N <span class="op">=</span> <span class="fu">pairwise_comparison</span>(sample1, sample2, N)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="11">
+<div class="cell-output cell-output-display" data-execution_count="245">
 <pre><code>100.146708375268</code></pre>
 </div>
 </div>
@@ -339,7 +339,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell-output cell-output-stdout">
 <pre><code>Number of samples: 17</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="12">
+<div class="cell-output cell-output-display" data-execution_count="246">
 <pre><code>3-element Vector{Any}:
  Dict{String, Any}("name" =&gt; "sample1", "bootstrap_sds" =&gt; Any[0.5120582711691188, 0.46589152722317934, 0.5231231363704707, 0.5370802482744412, 0.5212384843742974, 0.49991615178649, 0.49374746140630943, 0.49573520994594406, 0.4937870270802542, 0.4325621165762691  …  0.5417532298284111, 0.4820167873469936, 0.4604339004033621, 0.4444171087536868, 0.4473250911959609, 0.5636173001792437, 0.5234249052307217, 0.4536977837270571, 0.5058105081662801, 0.4980411594666947], "bootstrap_means" =&gt; Any[1.9357401306719222, 2.036205243173006, 1.9755901392523305, 1.9425437589461876, 1.9709020314281478, 2.1029109402244694, 2.0691995924647664, 1.9479975717647022, 2.003015905468987, 1.9990860063743006  …  1.9725374586366107, 2.026053123238343, 2.0110880789515826, 1.983501466365479, 2.0247580398873257, 1.9061445292563592, 1.9860436208137517, 2.0657595344414936, 1.990326426466182, 2.045054621182336], "mean" =&gt; 2.0015252479217738, "sd" =&gt; 0.5010238839758855)
  Dict{String, Any}("name" =&gt; "sample2", "bootstrap_sds" =&gt; Any[0.5573549806399314, 0.5104837712354791, 0.46143749175514753, 0.5147496519514394, 0.5283116728157523, 0.5021905881764003, 0.4923850413047467, 0.5035439963883661, 0.43955562798706616, 0.4835005583775651  …  0.5155850434198268, 0.43847412258691054, 0.4932895123030458, 0.5560676733516644, 0.46639386260870985, 0.5267827456522638, 0.513693054628595, 0.5121015442718326, 0.4336268404876216, 0.4868779401271261], "bootstrap_means" =&gt; Any[2.068051815937618, 2.016585915364614, 2.0588071666993475, 2.024012286158593, 1.993748613760646, 2.0129381939492, 2.0327642063156177, 1.9990331259573761, 2.0045595485674284, 2.0578087857370533  …  1.9448421389211583, 2.0573799269287067, 2.024067910238552, 1.9939013593626078, 1.8933383512438526, 1.9973761999162118, 1.9990984641964662, 1.982402957696114, 1.956431786257869, 2.1035315820684364], "mean" =&gt; 2.0018308082002823, "sd" =&gt; 0.49937454685818505)
@@ -392,7 +392,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb22-43"><a href="#cb22-43" aria-hidden="true" tabindex="-1"></a>    r_stats_dict</span>
 <span id="cb22-44"><a href="#cb22-44" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-45"><a href="#cb22-45" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="13">
+<div class="cell-output cell-output-display" data-execution_count="247">
 <pre><code>run_simulation (generic function with 1 method)</code></pre>
 </div>
 </div>
@@ -413,17 +413,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>        d <span class="op">=</span> <span class="fu">quantile</span>(r_stats, (<span class="fl">1</span><span class="op">-</span>alpha))</span>
 <span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>        se <span class="op">=</span> <span class="fu">standard_error</span>(sd1, sd2, N)</span>
 <span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>        v[<span class="st">"low"</span>] <span class="op">=</span> (m1 <span class="op">-</span> m2) <span class="op">-</span> (d <span class="op">*</span> se)</span>
-<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>        v[<span class="st">"obs"</span>] <span class="op">=</span> (m1 <span class="op">-</span> m2)</span>
-<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>        v[<span class="st">"high"</span>] <span class="op">=</span> (m1 <span class="op">-</span> m2) <span class="op">+</span> (d <span class="op">*</span> se)</span>
-<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>    o</span>
-<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
-<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a><span class="co"># get the r stats for our experiment</span></span>
-<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a><span class="fu">get_r_stats</span>(o) <span class="op">=</span> [v[<span class="st">"r_stat"</span>] for (k,v) <span class="kw">in</span> o]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="14">
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>        v[<span class="st">"d"</span>] <span class="op">=</span> d</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>        v[<span class="st">"low"</span>] <span class="op">=</span> <span class="fu">round</span>( (m1 <span class="op">-</span> m2) <span class="op">-</span> (d <span class="op">*</span> se), digits <span class="op">=</span> <span class="fl">5</span>) </span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>        v[<span class="st">"obs"</span>] <span class="op">=</span> <span class="fu">round</span>( (m1 <span class="op">-</span> m2), digits <span class="op">=</span> <span class="fl">5</span>)</span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>        v[<span class="st">"high"</span>] <span class="op">=</span> <span class="fu">round</span>( (m1 <span class="op">-</span> m2) <span class="op">+</span> (d <span class="op">*</span> se), digits <span class="op">=</span> <span class="fl">5</span>)</span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a>    o</span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a><span class="co"># get the r stats for our experiment</span></span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a><span class="fu">get_r_stats</span>(o) <span class="op">=</span> [v[<span class="st">"r_stat"</span>] for (k,v) <span class="kw">in</span> o]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="248">
 <pre><code>get_r_stats (generic function with 1 method)</code></pre>
 </div>
 </div>
@@ -437,7 +438,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>r_stats_N <span class="op">=</span> <span class="fu">get_r_stats</span>(sim_N)</span>
 <span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>r_stats_N <span class="op">|&gt;</span> histogram</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="15">
+<div class="cell-output cell-output-display" data-execution_count="249">
 <p><img src="simulation_files/figure-html/cell-15-output-1.svg" class="img-fluid"></p>
 </div>
 </div>
@@ -452,7 +453,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>r_stats_K <span class="op">=</span> <span class="fu">get_r_stats</span>(sim_K)</span>
 <span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>r_stats_K <span class="op">|&gt;</span> histogram</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="16">
+<div class="cell-output cell-output-display" data-execution_count="250">
 <p><img src="simulation_files/figure-html/cell-16-output-1.svg" class="img-fluid"></p>
 </div>
 </div>
@@ -467,12 +468,840 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>r_stats_B <span class="op">=</span> <span class="fu">get_r_stats</span>(sim_N)</span>
 <span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>r_stats_B <span class="op">|&gt;</span> histogram</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="17">
+<div class="cell-output cell-output-display" data-execution_count="251">
 <p><img src="simulation_files/figure-html/cell-17-output-1.svg" class="img-fluid"></p>
 </div>
 </div>
 <div class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"End..."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (k,v) <span class="kw">in</span> sim_B</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(k)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="st">"</span><span class="sc">\t</span><span class="st">"</span>, v[<span class="st">"low"</span>], <span class="st">" "</span>, v[<span class="st">"obs"</span>], <span class="st">" "</span>, v[<span class="st">"high"</span>])</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="st">"</span><span class="sc">\t</span><span class="st">"</span>, v[<span class="st">"d"</span>])</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>15_vs_5
+    -0.24718 -0.00132 0.24454
+    109.89837490780711
+9_vs_13
+    -0.24849 -0.00236 0.24377
+    109.89837490780711
+5_vs_7
+    -0.24463 0.00114 0.24691
+    109.89837490780711
+6_vs_13
+    -0.24832 -0.00163 0.24506
+    109.89837490780711
+4_vs_15
+    -0.24523 0.0008 0.24683
+    109.89837490780711
+17_vs_10
+    -0.24648 -0.00087 0.24475
+    109.89837490780711
+7_vs_13
+    -0.24735 -0.00073 0.24589
+    109.89837490780711
+4_vs_13
+    -0.24668 -0.00011 0.24646
+    109.89837490780711
+16_vs_7
+    -0.24407 0.00161 0.24729
+    109.89837490780711
+10_vs_6
+    -0.2426 0.00341 0.24942
+    109.89837490780711
+16_vs_4
+    -0.24463 0.00099 0.24662
+    109.89837490780711
+12_vs_13
+    -0.24653 0.00013 0.24678
+    109.89837490780711
+5_vs_15
+    -0.24454 0.00132 0.24718
+    109.89837490780711
+16_vs_2
+    -0.24576 -0.00036 0.24503
+    109.89837490780711
+15_vs_8
+    -0.24279 0.00282 0.24844
+    109.89837490780711
+12_vs_17
+    -0.2465 -0.00079 0.24493
+    109.89837490780711
+9_vs_11
+    -0.2489 -0.00358 0.24175
+    109.89837490780711
+10_vs_2
+    -0.24512 0.00053 0.24619
+    109.89837490780711
+8_vs_2
+    -0.25023 -0.00498 0.24027
+    109.89837490780711
+17_vs_14
+    -0.24444 0.00111 0.24667
+    109.89837490780711
+9_vs_5
+    -0.24806 -0.00277 0.24251
+    109.89837490780711
+9_vs_2
+    -0.24883 -0.00361 0.24162
+    109.89837490780711
+7_vs_1
+    -0.24779 -0.00167 0.24445
+    109.89837490780711
+1_vs_2
+    -0.24614 -0.00031 0.24553
+    109.89837490780711
+12_vs_7
+    -0.24518 0.00085 0.24689
+    109.89837490780711
+10_vs_5
+    -0.24435 0.00137 0.24708
+    109.89837490780711
+6_vs_8
+    -0.2435 0.0021 0.2477
+    109.89837490780711
+7_vs_14
+    -0.2464 -0.00053 0.24535
+    109.89837490780711
+9_vs_12
+    -0.24803 -0.00249 0.24306
+    109.89837490780711
+14_vs_6
+    -0.24452 0.00143 0.24738
+    109.89837490780711
+15_vs_11
+    -0.24802 -0.00213 0.24377
+    109.89837490780711
+1_vs_5
+    -0.24537 0.00053 0.24643
+    109.89837490780711
+10_vs_11
+    -0.24519 0.00056 0.24632
+    109.89837490780711
+15_vs_3
+    -0.24318 0.00242 0.24803
+    109.89837490780711
+3_vs_1
+    -0.24991 -0.00427 0.24137
+    109.89837490780711
+13_vs_8
+    -0.24242 0.00373 0.24989
+    109.89837490780711
+8_vs_15
+    -0.24844 -0.00282 0.24279
+    109.89837490780711
+14_vs_16
+    -0.24665 -0.00109 0.24448
+    109.89837490780711
+16_vs_9
+    -0.24195 0.00324 0.24843
+    109.89837490780711
+6_vs_4
+    -0.24754 -0.00152 0.2445
+    109.89837490780711
+9_vs_4
+    -0.24771 -0.00225 0.24321
+    109.89837490780711
+13_vs_16
+    -0.24719 -0.00088 0.24542
+    109.89837490780711
+14_vs_3
+    -0.24228 0.00313 0.24853
+    109.89837490780711
+6_vs_9
+    -0.24485 0.00073 0.24631
+    109.89837490780711
+8_vs_3
+    -0.24546 -0.0004 0.24465
+    109.89837490780711
+8_vs_12
+    -0.24943 -0.00386 0.24171
+    109.89837490780711
+8_vs_10
+    -0.25098 -0.00551 0.23996
+    109.89837490780711
+8_vs_5
+    -0.24945 -0.00415 0.24116
+    109.89837490780711
+12_vs_4
+    -0.24575 0.00024 0.24622
+    109.89837490780711
+6_vs_11
+    -0.24873 -0.00285 0.24303
+    109.89837490780711
+3_vs_2
+    -0.24981 -0.00458 0.24066
+    109.89837490780711
+15_vs_2
+    -0.24795 -0.00216 0.24364
+    109.89837490780711
+9_vs_10
+    -0.24959 -0.00414 0.24131
+    109.89837490780711
+1_vs_4
+    -0.24502 0.00105 0.24712
+    109.89837490780711
+6_vs_16
+    -0.24827 -0.00252 0.24323
+    109.89837490780711
+13_vs_10
+    -0.24834 -0.00178 0.24478
+    109.89837490780711
+8_vs_16
+    -0.24983 -0.00462 0.2406
+    109.89837490780711
+7_vs_17
+    -0.24731 -0.00164 0.24403
+    109.89837490780711
+8_vs_17
+    -0.24985 -0.00464 0.24056
+    109.89837490780711
+12_vs_5
+    -0.2461 -0.00029 0.24552
+    109.89837490780711
+17_vs_16
+    -0.24533 3.0e-5 0.24538
+    109.89837490780711
+14_vs_2
+    -0.24705 -0.00145 0.24415
+    109.89837490780711
+10_vs_17
+    -0.24475 0.00087 0.24648
+    109.89837490780711
+5_vs_11
+    -0.24639 -0.0008 0.24479
+    109.89837490780711
+13_vs_2
+    -0.24759 -0.00125 0.24509
+    109.89837490780711
+5_vs_4
+    -0.2452 0.00052 0.24625
+    109.89837490780711
+11_vs_14
+    -0.24428 0.00142 0.24712
+    109.89837490780711
+3_vs_12
+    -0.24901 -0.00346 0.2421
+    109.89837490780711
+13_vs_14
+    -0.2463 0.0002 0.24671
+    109.89837490780711
+16_vs_3
+    -0.24099 0.00421 0.24941
+    109.89837490780711
+7_vs_12
+    -0.24689 -0.00085 0.24518
+    109.89837490780711
+8_vs_1
+    -0.25033 -0.00467 0.24098
+    109.89837490780711
+4_vs_9
+    -0.24321 0.00225 0.24771
+    109.89837490780711
+9_vs_14
+    -0.24755 -0.00216 0.24323
+    109.89837490780711
+15_vs_17
+    -0.24758 -0.00182 0.24394
+    109.89837490780711
+1_vs_6
+    -0.24362 0.00257 0.24876
+    109.89837490780711
+3_vs_4
+    -0.24869 -0.00322 0.24225
+    109.89837490780711
+3_vs_8
+    -0.24465 0.0004 0.24546
+    109.89837490780711
+13_vs_15
+    -0.2458 0.00091 0.24761
+    109.89837490780711
+11_vs_12
+    -0.24476 0.00109 0.24694
+    109.89837490780711
+13_vs_6
+    -0.24506 0.00163 0.24832
+    109.89837490780711
+7_vs_4
+    -0.24656 -0.00062 0.24533
+    109.89837490780711
+6_vs_15
+    -0.24688 -0.00072 0.24543
+    109.89837490780711
+16_vs_5
+    -0.24499 0.00047 0.24593
+    109.89837490780711
+17_vs_15
+    -0.24394 0.00182 0.24758
+    109.89837490780711
+5_vs_2
+    -0.24633 -0.00083 0.24466
+    109.89837490780711
+7_vs_16
+    -0.24729 -0.00161 0.24407
+    109.89837490780711
+12_vs_11
+    -0.24694 -0.00109 0.24476
+    109.89837490780711
+17_vs_2
+    -0.24573 -0.00034 0.24506
+    109.89837490780711
+2_vs_11
+    -0.2455 3.0e-5 0.24556
+    109.89837490780711
+3_vs_7
+    -0.24812 -0.0026 0.24292
+    109.89837490780711
+6_vs_1
+    -0.24876 -0.00257 0.24362
+    109.89837490780711
+16_vs_14
+    -0.24448 0.00109 0.24665
+    109.89837490780711
+11_vs_6
+    -0.24303 0.00285 0.24873
+    109.89837490780711
+9_vs_3
+    -0.24406 0.00097 0.246
+    109.89837490780711
+13_vs_7
+    -0.24589 0.00073 0.24735
+    109.89837490780711
+7_vs_2
+    -0.24769 -0.00198 0.24374
+    109.89837490780711
+2_vs_1
+    -0.24553 0.00031 0.24614
+    109.89837490780711
+1_vs_11
+    -0.24621 -0.00028 0.24566
+    109.89837490780711
+11_vs_9
+    -0.24175 0.00358 0.2489
+    109.89837490780711
+16_vs_11
+    -0.24583 -0.00033 0.24516
+    109.89837490780711
+4_vs_17
+    -0.24665 -0.00102 0.2446
+    109.89837490780711
+4_vs_8
+    -0.24186 0.00362 0.2491
+    109.89837490780711
+12_vs_14
+    -0.24559 0.00033 0.24625
+    109.89837490780711
+15_vs_14
+    -0.24667 -0.00071 0.24526
+    109.89837490780711
+10_vs_4
+    -0.244 0.00189 0.24778
+    109.89837490780711
+16_vs_15
+    -0.24397 0.00179 0.24756
+    109.89837490780711
+16_vs_8
+    -0.2406 0.00462 0.24983
+    109.89837490780711
+4_vs_14
+    -0.24574 9.0e-5 0.24592
+    109.89837490780711
+13_vs_1
+    -0.24768 -0.00094 0.2458
+    109.89837490780711
+15_vs_7
+    -0.24626 -0.00018 0.2459
+    109.89837490780711
+15_vs_10
+    -0.24871 -0.00269 0.24333
+    109.89837490780711
+5_vs_10
+    -0.24708 -0.00137 0.24435
+    109.89837490780711
+2_vs_14
+    -0.24415 0.00145 0.24705
+    109.89837490780711
+2_vs_6
+    -0.24291 0.00288 0.24866
+    109.89837490780711
+5_vs_6
+    -0.2438 0.00205 0.24789
+    109.89837490780711
+13_vs_3
+    -0.24281 0.00333 0.24947
+    109.89837490780711
+4_vs_12
+    -0.24622 -0.00024 0.24575
+    109.89837490780711
+13_vs_4
+    -0.24646 0.00011 0.24668
+    109.89837490780711
+4_vs_16
+    -0.24662 -0.00099 0.24463
+    109.89837490780711
+9_vs_17
+    -0.24846 -0.00327 0.24192
+    109.89837490780711
+10_vs_14
+    -0.24384 0.00198 0.2478
+    109.89837490780711
+14_vs_7
+    -0.24535 0.00053 0.2464
+    109.89837490780711
+10_vs_13
+    -0.24478 0.00178 0.24834
+    109.89837490780711
+12_vs_3
+    -0.2421 0.00346 0.24901
+    109.89837490780711
+9_vs_8
+    -0.24367 0.00137 0.24641
+    109.89837490780711
+1_vs_3
+    -0.24137 0.00427 0.24991
+    109.89837490780711
+7_vs_15
+    -0.2459 0.00018 0.24626
+    109.89837490780711
+10_vs_12
+    -0.24432 0.00165 0.24763
+    109.89837490780711
+12_vs_6
+    -0.24435 0.00176 0.24786
+    109.89837490780711
+16_vs_17
+    -0.24538 -3.0e-5 0.24533
+    109.89837490780711
+4_vs_7
+    -0.24533 0.00062 0.24656
+    109.89837490780711
+6_vs_7
+    -0.24697 -0.0009 0.24516
+    109.89837490780711
+2_vs_5
+    -0.24466 0.00083 0.24633
+    109.89837490780711
+11_vs_10
+    -0.24632 -0.00056 0.24519
+    109.89837490780711
+2_vs_16
+    -0.24503 0.00036 0.24576
+    109.89837490780711
+11_vs_8
+    -0.2404 0.00495 0.2503
+    109.89837490780711
+11_vs_3
+    -0.24079 0.00455 0.24988
+    109.89837490780711
+3_vs_16
+    -0.24941 -0.00421 0.24099
+    109.89837490780711
+10_vs_15
+    -0.24333 0.00269 0.24871
+    109.89837490780711
+11_vs_15
+    -0.24377 0.00213 0.24802
+    109.89837490780711
+4_vs_3
+    -0.24225 0.00322 0.24869
+    109.89837490780711
+3_vs_15
+    -0.24803 -0.00242 0.24318
+    109.89837490780711
+5_vs_17
+    -0.24595 -0.0005 0.24495
+    109.89837490780711
+14_vs_12</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    -0.24625 -0.00033 0.24559
+    109.89837490780711
+1_vs_16
+    -0.24575 6.0e-5 0.24586
+    109.89837490780711
+16_vs_10
+    -0.24652 -0.0009 0.24472
+    109.89837490780711
+16_vs_13
+    -0.24542 0.00088 0.24719
+    109.89837490780711
+9_vs_6
+    -0.24631 -0.00073 0.24485
+    109.89837490780711
+2_vs_10
+    -0.24619 -0.00053 0.24512
+    109.89837490780711
+7_vs_8
+    -0.24252 0.003 0.24853
+    109.89837490780711
+16_vs_6
+    -0.24323 0.00252 0.24827
+    109.89837490780711
+7_vs_3
+    -0.24292 0.0026 0.24812
+    109.89837490780711
+10_vs_3
+    -0.24035 0.00511 0.25057
+    109.89837490780711
+5_vs_8
+    -0.24116 0.00415 0.24945
+    109.89837490780711
+2_vs_13
+    -0.24509 0.00125 0.24759
+    109.89837490780711
+6_vs_10
+    -0.24942 -0.00341 0.2426
+    109.89837490780711
+11_vs_13
+    -0.24522 0.00122 0.24765
+    109.89837490780711
+15_vs_16
+    -0.24756 -0.00179 0.24397
+    109.89837490780711
+3_vs_11
+    -0.24988 -0.00455 0.24079
+    109.89837490780711
+5_vs_16
+    -0.24593 -0.00047 0.24499
+    109.89837490780711
+6_vs_14
+    -0.24738 -0.00143 0.24452
+    109.89837490780711
+8_vs_11
+    -0.2503 -0.00495 0.2404
+    109.89837490780711
+2_vs_3
+    -0.24066 0.00458 0.24981
+    109.89837490780711
+12_vs_15
+    -0.24508 0.00103 0.24715
+    109.89837490780711
+2_vs_9
+    -0.24162 0.00361 0.24883
+    109.89837490780711
+10_vs_8
+    -0.23996 0.00551 0.25098
+    109.89837490780711
+17_vs_1
+    -0.24583 -3.0e-5 0.24577
+    109.89837490780711
+7_vs_10
+    -0.24844 -0.00251 0.24343
+    109.89837490780711
+2_vs_7
+    -0.24374 0.00198 0.24769
+    109.89837490780711
+11_vs_2
+    -0.24556 -3.0e-5 0.2455
+    109.89837490780711
+16_vs_12
+    -0.24496 0.00076 0.24647
+    109.89837490780711
+1_vs_10
+    -0.2469 -0.00084 0.24522
+    109.89837490780711
+10_vs_7
+    -0.24343 0.00251 0.24844
+    109.89837490780711
+13_vs_17
+    -0.24721 -0.00091 0.24539
+    109.89837490780711
+2_vs_17
+    -0.24506 0.00034 0.24573
+    109.89837490780711
+11_vs_1
+    -0.24566 0.00028 0.24621
+    109.89837490780711
+14_vs_11
+    -0.24712 -0.00142 0.24428
+    109.89837490780711
+14_vs_9
+    -0.24323 0.00216 0.24755
+    109.89837490780711
+10_vs_9
+    -0.24131 0.00414 0.24959
+    109.89837490780711
+2_vs_4
+    -0.24431 0.00136 0.24702
+    109.89837490780711
+7_vs_5
+    -0.24691 -0.00114 0.24463
+    109.89837490780711
+1_vs_17
+    -0.24577 3.0e-5 0.24583
+    109.89837490780711
+15_vs_12
+    -0.24715 -0.00103 0.24508
+    109.89837490780711
+11_vs_17
+    -0.24518 0.00031 0.2458
+    109.89837490780711
+14_vs_17
+    -0.24667 -0.00111 0.24444
+    109.89837490780711
+3_vs_5
+    -0.24904 -0.00374 0.24155
+    109.89837490780711
+8_vs_9
+    -0.24641 -0.00137 0.24367
+    109.89837490780711
+17_vs_8
+    -0.24056 0.00464 0.24985
+    109.89837490780711
+15_vs_1
+    -0.24805 -0.00185 0.24435
+    109.89837490780711
+5_vs_13
+    -0.24599 0.00041 0.24681
+    109.89837490780711
+7_vs_6
+    -0.24516 0.0009 0.24697
+    109.89837490780711
+17_vs_13
+    -0.24539 0.00091 0.24721
+    109.89837490780711
+6_vs_3
+    -0.24389 0.0017 0.24729
+    109.89837490780711
+17_vs_5
+    -0.24495 0.0005 0.24595
+    109.89837490780711
+1_vs_9
+    -0.24233 0.0033 0.24893
+    109.89837490780711
+5_vs_9
+    -0.24251 0.00277 0.24806
+    109.89837490780711
+3_vs_10
+    -0.25057 -0.00511 0.24035
+    109.89837490780711
+6_vs_5
+    -0.24789 -0.00205 0.2438
+    109.89837490780711
+6_vs_17
+    -0.24829 -0.00254 0.2432
+    109.89837490780711
+7_vs_9
+    -0.24388 0.00163 0.24714
+    109.89837490780711
+10_vs_16
+    -0.24472 0.0009 0.24652
+    109.89837490780711
+8_vs_14
+    -0.24894 -0.00353 0.24188
+    109.89837490780711
+13_vs_11
+    -0.24765 -0.00122 0.24522
+    109.89837490780711
+12_vs_1
+    -0.24697 -0.00082 0.24534
+    109.89837490780711
+15_vs_6
+    -0.24543 0.00072 0.24688
+    109.89837490780711
+13_vs_12
+    -0.24678 -0.00013 0.24653
+    109.89837490780711
+5_vs_14
+    -0.24504 0.00062 0.24627
+    109.89837490780711
+11_vs_7
+    -0.24387 0.00195 0.24776
+    109.89837490780711
+5_vs_12
+    -0.24552 0.00029 0.2461
+    109.89837490780711
+16_vs_1
+    -0.24586 -6.0e-5 0.24575
+    109.89837490780711
+4_vs_11
+    -0.24709 -0.00133 0.24444
+    109.89837490780711
+3_vs_17
+    -0.24944 -0.00424 0.24096
+    109.89837490780711
+1_vs_14
+    -0.24486 0.00114 0.24715
+    109.89837490780711
+3_vs_6
+    -0.24729 -0.0017 0.24389
+    109.89837490780711
+7_vs_11
+    -0.24776 -0.00195 0.24387
+    109.89837490780711
+14_vs_5
+    -0.24627 -0.00062 0.24504
+    109.89837490780711
+14_vs_10
+    -0.2478 -0.00198 0.24384
+    109.89837490780711
+9_vs_1
+    -0.24893 -0.0033 0.24233
+    109.89837490780711
+12_vs_2
+    -0.24687 -0.00112 0.24463
+    109.89837490780711
+2_vs_15
+    -0.24364 0.00216 0.24795
+    109.89837490780711
+2_vs_12
+    -0.24463 0.00112 0.24687
+    109.89837490780711
+17_vs_3
+    -0.24096 0.00424 0.24944
+    109.89837490780711
+11_vs_4
+    -0.24444 0.00133 0.24709
+    109.89837490780711
+13_vs_5
+    -0.24681 -0.00041 0.24599
+    109.89837490780711
+3_vs_14
+    -0.24853 -0.00313 0.24228
+    109.89837490780711
+12_vs_10
+    -0.24763 -0.00165 0.24432
+    109.89837490780711
+13_vs_9
+    -0.24377 0.00236 0.24849
+    109.89837490780711
+1_vs_7
+    -0.24445 0.00167 0.24779
+    109.89837490780711
+17_vs_7
+    -0.24403 0.00164 0.24731
+    109.89837490780711
+8_vs_13
+    -0.24989 -0.00373 0.24242
+    109.89837490780711
+5_vs_3
+    -0.24155 0.00374 0.24904
+    109.89837490780711
+14_vs_13
+    -0.24671 -0.0002 0.2463
+    109.89837490780711
+14_vs_1
+    -0.24715 -0.00114 0.24486
+    109.89837490780711
+14_vs_8
+    -0.24188 0.00353 0.24894
+    109.89837490780711
+17_vs_6
+    -0.2432 0.00254 0.24829
+    109.89837490780711
+17_vs_11
+    -0.2458 -0.00031 0.24518
+    109.89837490780711
+4_vs_6
+    -0.2445 0.00152 0.24754
+    109.89837490780711
+12_vs_16
+    -0.24647 -0.00076 0.24496
+    109.89837490780711
+10_vs_1
+    -0.24522 0.00084 0.2469
+    109.89837490780711
+15_vs_4
+    -0.24683 -0.0008 0.24523
+    109.89837490780711
+4_vs_10
+    -0.24778 -0.00189 0.244
+    109.89837490780711
+15_vs_13
+    -0.24761 -0.00091 0.2458
+    109.89837490780711
+12_vs_8
+    -0.24171 0.00386 0.24943
+    109.89837490780711
+1_vs_8
+    -0.24098 0.00467 0.25033
+    109.89837490780711
+11_vs_16
+    -0.24516 0.00033 0.24583
+    109.89837490780711
+9_vs_7
+    -0.24714 -0.00163 0.24388
+    109.89837490780711
+11_vs_5
+    -0.24479 0.0008 0.24639
+    109.89837490780711
+6_vs_2
+    -0.24866 -0.00288 0.24291
+    109.89837490780711
+17_vs_12
+    -0.24493 0.00079 0.2465
+    109.89837490780711
+4_vs_2
+    -0.24702 -0.00136 0.24431
+    109.89837490780711
+3_vs_13
+    -0.24947 -0.00333 0.24281
+    109.89837490780711
+9_vs_16
+    -0.24843 -0.00324 0.24195
+    109.89837490780711
+8_vs_6
+    -0.2477 -0.0021 0.2435
+    109.89837490780711
+15_vs_9
+    -0.24414 0.00145 0.24704
+    109.89837490780711
+17_vs_4
+    -0.2446 0.00102 0.24665
+    109.89837490780711
+14_vs_4
+    -0.24592 -9.0e-5 0.24574
+    109.89837490780711
+1_vs_15
+    -0.24435 0.00185 0.24805
+    109.89837490780711
+9_vs_15
+    -0.24704 -0.00145 0.24414
+    109.89837490780711
+1_vs_13
+    -0.2458 0.00094 0.24768
+    109.89837490780711
+3_vs_9
+    -0.246 -0.00097 0.24406
+    109.89837490780711
+4_vs_1
+    -0.24712 -0.00105 0.24502
+    109.89837490780711
+5_vs_1
+    -0.24643 -0.00053 0.24537
+    109.89837490780711
+4_vs_5
+    -0.24625 -0.00052 0.2452
+    109.89837490780711
+8_vs_4
+    -0.2491 -0.00362 0.24186
+    109.89837490780711
+2_vs_8
+    -0.24027 0.00498 0.25023
+    109.89837490780711
+14_vs_15
+    -0.24526 0.00071 0.24667
+    109.89837490780711
+1_vs_12
+    -0.24534 0.00082 0.24697
+    109.89837490780711
+8_vs_7
+    -0.24853 -0.003 0.24252
+    109.89837490780711
+12_vs_9
+    -0.24306 0.00249 0.24803
+    109.89837490780711
+17_vs_9
+    -0.24192 0.00327 0.24846
+    109.89837490780711
+6_vs_12
+    -0.24786 -0.00176 0.24435
+    109.89837490780711</code></pre>
+</div>
+</div>
+<p>what</p>
+<div class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"End..."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>End...</code></pre>
 </div>

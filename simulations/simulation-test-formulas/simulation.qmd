@@ -281,9 +281,10 @@ function computeCIs!(o, alpha, N)
         d = quantile(r_stats, (1-alpha))
         se = standard_error(sd1, sd2, N)
 
-        v["low"] = (m1 - m2) - (d * se)
-        v["obs"] = (m1 - m2)
-        v["high"] = (m1 - m2) + (d * se)
+        v["d"] = d
+        v["low"] = round( (m1 - m2) - (d * se), digits = 5) 
+        v["obs"] = round( (m1 - m2), digits = 5)
+        v["high"] = round( (m1 - m2) + (d * se), digits = 5)
 
     end
     o
@@ -334,6 +335,19 @@ r_stats_B = get_r_stats(sim_N)
 
 r_stats_B |> histogram
 ```
+
+
+```{julia}
+
+for (k,v) in sim_B
+    println(k)
+    println("\t", v["low"], " ", v["obs"], " ", v["high"])
+    println("\t", v["d"])
+end
+```
+
+
+what
 
 
 ```{julia}
