@@ -4,7 +4,7 @@
 using Random
 using Distributions
 using Plots
-using PlotThemes; theme(:dracula)
+using PlotThemes; # theme(:dracula)
 using DataFrames
 using CSV
 ```
@@ -33,9 +33,9 @@ Random.seed!(8675309)
 # observations per sample
 N = 100000
 # number of batches
-B = Int(N/100)
+B = 100
 # observations per batch
-K = Int(N/B)
+K = 1000
 
 # number of samples
 samples_per_experiment = 17
@@ -175,8 +175,8 @@ function pairwise_comparison(sample1, sample2, Z)
     # a vector to collect the R statistics
     R_stats = []
 
-    # the number of iterations must match the number of batches, K
-    for i in 1:K
+    # the number of iterations must match the number of batches, B
+    for i in 1:B
         # get the standard error using the current batch sd
         se = standard_error(s1_sd_boots[i], s2_sd_boots[i], Z)
         
@@ -327,15 +327,24 @@ r_stats_K |> histogram
 
 ```{julia}
 
-sim_B = run_simulation(samples, N)
+sim_B = run_simulation(samples, B)
 
-sim_B = computeCIs!(sim_N, 0.05, N)
+sim_B = computeCIs!(sim_B, 0.05, N)
 
-r_stats_B = get_r_stats(sim_N)
+r_stats_B = get_r_stats(sim_B)
 
 r_stats_B |> histogram
 ```
 
+
+```{julia}
+
+for (k,v) in sim_N
+    println(k)
+    println("\t", v["low"], " ", v["obs"], " ", v["high"])
+    println("\t", v["d"])
+end
+```
 
 ```{julia}
 
@@ -346,18 +355,16 @@ for (k,v) in sim_B
 end
 ```
 
-
-what
-
-
 ```{julia}
-println("End...")
+
+for (k,v) in sim_K
+    println(k)
+    println("\t", v["low"], " ", v["obs"], " ", v["high"])
+    println("\t", v["d"])
+end
 ```
 
-```{julia}
-
-``` 
 
 
 # TODO
-    -  Get one R stat per test (largest j>j')
+    -  Get one R stat per test (largest j>j') question>
