@@ -237,9 +237,7 @@ function run_simulation(samples, Z)
             end
         end
     end
-
     r_stats_dict
-
 end
 ```
 
@@ -270,35 +268,14 @@ function computeCIs!(o, alpha, N)
     end
     o
 end
-
-# get the r stats for our experiment
-get_r_stats(o) = [v["r_stat"] for (k,v) in o]
 ```
 
 ```{julia}
 
-sample1 = get_batch_info(generate_sample(2, 0.5, N), "sample1", K)
-sample2 = get_batch_info(generate_sample(2, 0.5, N), "sample2", K);
-```
-
-```{julia}
-
-experiment = run_simulation([sample1, sample2], B)
-```
-
-```{julia}
-
-experiment = computeCIs!(experiment, 0.05, N)
-```
-
-```{julia}
-
-# for(k,v) in experiment
-#     println(k)
-#     for(i,j) in v
-#         println("\t", i, ":  ", j)
-#     end
-# end
+# sample1 = get_batch_info(generate_sample(2, 0.5, N), "sample1", K)
+# sample2 = get_batch_info(generate_sample(2, 0.5, N), "sample2", K);
+# experiment = run_simulation([sample1, sample2], B)
+# experiment = computeCIs!(experiment, 0.05, N)
 ```
 
 ```{julia}
@@ -322,6 +299,14 @@ function get_all_rmax(o)
     end
     all_r_maxes
 end
+
+function get_all_d(o)
+    all_d = []
+    for (k,v) in o
+        push!(all_d, v["d"])
+    end
+    all_d[1]
+end
 ```
 
 ```{julia}
@@ -336,29 +321,34 @@ end
 samples |> length == samples_per_experiment
 ```
 
+```{julia}
+function describe_experiment(sim)
+
+    r_stats = get_all_rstats(sim)
+    r_max = get_all_rmax(sim)
+
+    println("d: ", get_all_d(sim))
+    println("Number of R stats: ", length(r_stats))
+    println("Number of max R stats: ", length(r_max))
+    println("17*8*B: ", 17 * 8 * B)
+    println("(K(K-1))/2: ",  ( K*(K-1) /2 ) )
+
+    r_hist = histogram(r_stats, title = "Distribution of Rs") 
+    r_max_hist = histogram(r_max, title = "Distribution of max(R)s")
+
+    plot(r_hist, r_max_hist, layout = (2,1))
+end
+```
+
 ### Using N
 
 ```{julia}
-
 
 sim_N = run_simulation(samples, N)
 
 sim_N = computeCIs!(sim_N, 0.05, N)
 
-r_stats_N = get_all_rstats(sim_N)
-
-r_max_N = get_all_rmax(sim_N)
-
-println("Number of R stats: ", length(r_stats_N))
-println("Number of max R stats: ", length(r_max_N))
-```
-
-```{julia}
-r_stats_N |> histogram
-```
-
-```{julia}
-r_max_N |> histogram
+describe_experiment(sim_N)
 ```
 
 ### Using K
@@ -369,18 +359,7 @@ sim_K = run_simulation(samples, K)
 
 sim_K = computeCIs!(sim_K, 0.05, N)
 
-r_stats_K = get_all_rstats(sim_K)
-
-max_rstats_K = get_all_rmax(sim_K) 
-```
-
-```{julia}
-r_stats_K |> histogram
-```
-
-```{julia}
-
-max_rstats_K |> histogram
+describe_experiment(sim_K)
 ```
 
 ### Using B
@@ -391,49 +370,8 @@ sim_B = run_simulation(samples, B)
 
 sim_B = computeCIs!(sim_B, 0.05, N)
 
-r_stats_B = get_all_rstats(sim_B)
-
-max_rstats_B = get_all_rmax(sim_B)
+describe_experiment(sim_B)
 ```
-
-```{julia}
-r_stats_B |> histogram
-```
-
-```{julia}
-
-max_rstats_B |> histogram
-```
-
-
-```{julia}
-
-# for (k,v) in sim_N
-#     println(k)
-#     println("\t", v["low"], " ", v["obs"], " ", v["high"])
-#     println("\t", v["d"])
-# end
-```
-
-```{julia}
-
-# for (k,v) in sim_B
-#     println(k)
-#     println("\t", v["low"], " ", v["obs"], " ", v["high"])
-#     println("\t", v["d"])
-# end
-```
-
-```{julia}
-
-# for (k,v) in sim_K
-#     println(k)
-#     println("\t", v["low"], " ", v["obs"], " ", v["high"])
-#     println("\t", v["d"])
-# end
-```
-
-
 
 # TODO
     -  Get one R stat per test (largest j>j') question>
