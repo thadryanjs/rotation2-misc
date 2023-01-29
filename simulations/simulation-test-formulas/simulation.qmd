@@ -3,6 +3,7 @@
 
 using Random
 using Distributions
+using HypothesisTests
 using Plots
 using PlotThemes; # theme(:dracula)
 using DataFrames
@@ -374,4 +375,38 @@ describe_experiment(sim_B)
 ```
 
 # TODO
-    -  Get one R stat per test (largest j>j') question>
+    -  Get one R stat per test (largest j>j') question
+
+```{julia}
+
+n = 1000
+
+ts = []
+
+for i in 1:1000
+    
+    s1 = generate_sample(0.0, 0.25, n)
+    s2 = generate_sample(0.0, 0.25, n)
+    
+    m1 = mean(s1)
+    m2 = mean(s2)
+
+    sd1 = std(s1)
+    sd2 = std(s2)
+
+    se = standard_error(sd1, sd2, n)
+
+    t = (m1-m2)/se
+
+    push!(ts, t)
+
+end
+
+histogram(ts)
+```
+
+
+
+```{julia}
+
+```

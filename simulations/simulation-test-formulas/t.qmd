@@ -1,0 +1,22 @@
+
+
+
+```{r}
+
+
+n <- 10000
+ts <- c()
+
+for(i in 1:n) {
+
+    s1 <- runif(1000)
+    s2 <- runif(1000)
+    
+    t <- t.test(s1,s2)
+
+    ts <- c(ts, t$statistic)
+}
+
+
+hist(ts)
+```
