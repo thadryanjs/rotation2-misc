@@ -238,8 +238,6 @@ function run_simulation(samples, Z)
         end
     end
 
-    println(comparison)
-
     r_stats_dict
 
 end
@@ -295,19 +293,19 @@ experiment = computeCIs!(experiment, 0.05, N)
 
 ```{julia}
 
-for(k,v) in experiment
-    println(k)
-    for(i,j) in v
-        println("\t", i, ":  ", j)
-    end
-end
+# for(k,v) in experiment
+#     println(k)
+#     for(i,j) in v
+#         println("\t", i, ":  ", j)
+#     end
+# end
 ```
 
 ```{julia}
 
 function get_all_rstats(o)
     all_r_stats = []
-    for(k,v) in experiment
+    for(k,v) in o
         vec = v["r_stats_vector"]
         for i in vec
             push!(all_r_stats, i)
@@ -316,8 +314,26 @@ function get_all_rstats(o)
     all_r_stats
 end
 
-n_r = get_all_rstats(experiment) |> length
-n_r == B
+
+function get_all_rmax(o)
+    all_r_maxes = []
+    for (k,v) in o
+        push!(all_r_maxes, v["max_r_stat"])
+    end
+    all_r_maxes
+end
+```
+
+```{julia}
+
+samples = []
+for i in 1:samples_per_experiment
+    s = generate_sample(2, 0.5, N)
+    sr = get_batch_info(s, string("sample", i), K)
+    push!(samples, sr)
+end
+
+samples |> length == samples_per_experiment
 ```
 
 ### Using N
@@ -325,26 +341,29 @@ n_r == B
 ```{julia}
 
 
-# sim_N = run_simulation(samples, N)
+sim_N = run_simulation(samples, N)
 
-# sim_N = computeCIs!(sim_N, 0.05, N)
+sim_N = computeCIs!(sim_N, 0.05, N)
 
-# r_stats_N = get_r_stats(sim_N)
+r_stats_N = get_all_rstats(sim_N)
 
-# r_stats_N |> histogram
+r_max_N = get_all_rmax(sim_N)
+
+println("Number of R stats: ", length(r_stats_N))
+println("Number of max R stats: ", length(r_max_N))
 ```
 
 ### Using K
 
 ```{julia}
 
-# sim_K = run_simulation(samples, K)
+sim_K = run_simulation(samples, K)
 
-# sim_K = computeCIs!(sim_K, 0.05, N)
+sim_K = computeCIs!(sim_K, 0.05, N)
 
-# r_stats_K = get_r_stats(sim_K)
+r_stats_K = get_all_rstats(sim_K)
 
-# r_stats_K |> histogram
+r_stats_K |> histogram
 ```
 
 
@@ -353,13 +372,13 @@ n_r == B
 
 ```{julia}
 
-# sim_B = run_simulation(samples, B)
+sim_B = run_simulation(samples, B)
 
-# sim_B = computeCIs!(sim_B, 0.05, N)
+sim_B = computeCIs!(sim_B, 0.05, N)
 
-# r_stats_B = get_r_stats(sim_B)
+r_stats_B = get_all_rstats(sim_B)
 
-# r_stats_B |> histogram
+r_stats_B |> histogram
 ```
 
 
