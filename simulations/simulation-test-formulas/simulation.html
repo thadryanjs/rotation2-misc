@@ -170,7 +170,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">standard_error</span>(sd1, sd2, N)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sqrt</span>( ( (sd1<span class="op">^</span><span class="fl">2</span>) <span class="op">+</span> (sd2<span class="op">^</span><span class="fl">2</span>) ) <span class="op">*</span> (N<span class="op">^-</span><span class="fl">1</span>) )</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="353">
+<div class="cell-output cell-output-display" data-execution_count="812">
 <pre><code>standard_error (generic function with 1 method)</code></pre>
 </div>
 </div>
@@ -183,7 +183,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">standard_error_boot</span>(sd1, sd2, Z)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sqrt</span>( ( (sd1<span class="op">^</span><span class="fl">2</span>) <span class="op">+</span> (sd2<span class="op">^</span><span class="fl">2</span>) ) <span class="op">*</span> (Z<span class="op">^-</span><span class="fl">1</span>) )</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="354">
+<div class="cell-output cell-output-display" data-execution_count="813">
 <pre><code>standard_error_boot (generic function with 1 method)</code></pre>
 </div>
 </div>
@@ -195,7 +195,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">calc_root_stat</span>(m1, m1b, m2, m2b, se)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">abs</span>( ( (m1b <span class="op">-</span> m2b) <span class="op">-</span> (m1 <span class="op">-</span> m2) ) <span class="op">/</span>se )</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="355">
+<div class="cell-output cell-output-display" data-execution_count="814">
 <pre><code>calc_root_stat (generic function with 1 method)</code></pre>
 </div>
 </div>
@@ -212,7 +212,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>samples <span class="op">=</span> [<span class="fu">generate_sample</span>(<span class="fl">2</span>, <span class="fl">0.5</span>, N) for i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>]</span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">histogram</span>(samples[<span class="fl">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="356">
+<div class="cell-output cell-output-display" data-execution_count="815">
 <p><img src="simulation_files/figure-html/cell-7-output-1.svg" class="img-fluid"></p>
 </div>
 </div>
@@ -256,7 +256,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
 <span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a>sample1 <span class="op">=</span> <span class="fu">get_batch_info</span>(samples[<span class="fl">1</span>], <span class="st">"sample1"</span>, K)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="357">
+<div class="cell-output cell-output-display" data-execution_count="816">
 <pre><code>Dict{String, Any} with 5 entries:
   "name"            =&gt; "sample1"
   "bootstrap_sds"   =&gt; Any[0.498189, 0.500786, 0.507715, 0.510555, 0.509852, 0.…
@@ -268,7 +268,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Now we have a dictionary containing the information about a samples we need to compare it to another. We will get another sample to compare it to.</p>
 <div class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>sample2 <span class="op">=</span> <span class="fu">get_batch_info</span>(samples[<span class="fl">2</span>], <span class="st">"sample2"</span>, K)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="358">
+<div class="cell-output cell-output-display" data-execution_count="817">
 <pre><code>Dict{String, Any} with 5 entries:
   "name"            =&gt; "sample2"
   "bootstrap_sds"   =&gt; Any[0.492691, 0.513217, 0.512337, 0.498081, 0.505859, 0.…
@@ -308,7 +308,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
 <span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>    R_stats</span>
 <span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="359">
+<div class="cell-output cell-output-display" data-execution_count="818">
 <pre><code>pairwise_comparison (generic function with 1 method)</code></pre>
 </div>
 </div>
@@ -366,7 +366,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb17-47"><a href="#cb17-47" aria-hidden="true" tabindex="-1"></a>    r_stats_dict</span>
 <span id="cb17-48"><a href="#cb17-48" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-49"><a href="#cb17-49" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="360">
+<div class="cell-output cell-output-display" data-execution_count="819">
 <pre><code>run_simulation (generic function with 1 method)</code></pre>
 </div>
 </div>
@@ -398,7 +398,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a><span class="co"># get the r stats for our experiment</span></span>
 <span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a><span class="fu">get_r_stats</span>(o) <span class="op">=</span> [v[<span class="st">"r_stat"</span>] for (k,v) <span class="kw">in</span> o]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="361">
+<div class="cell-output cell-output-display" data-execution_count="820">
 <pre><code>get_r_stats (generic function with 1 method)</code></pre>
 </div>
 </div>
@@ -408,14 +408,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>experiment <span class="op">=</span> <span class="fu">run_simulation</span>([sample1, sample2], B)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="363">
+<div class="cell-output cell-output-display" data-execution_count="822">
 <pre><code>Dict{Any, Any} with 1 entry:
   "1_vs_2" =&gt; Dict{String, Any}("m2"=&gt;2.00183, "r_stats_vector"=&gt;Any[0.399833, …</code></pre>
 </div>
 </div>
 <div class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>experiment <span class="op">=</span> <span class="fu">computeCIs!</span>(experiment, <span class="fl">0.05</span>, N)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="364">
+<div class="cell-output cell-output-display" data-execution_count="823">
 <pre><code>Dict{Any, Any} with 1 entry:
   "1_vs_2" =&gt; Dict{String, Any}("d"=&gt;0.770218, "obs"=&gt;-0.00031, "high"=&gt;0.00142…</code></pre>
 </div>
@@ -448,7 +448,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
 <span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>    all_r_maxes</span>
 <span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="366">
+<div class="cell-output cell-output-display" data-execution_count="825">
 <pre><code>get_all_rmax (generic function with 1 method)</code></pre>
 </div>
 </div>
@@ -461,7 +461,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
 <span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>samples <span class="op">|&gt;</span> length <span class="op">==</span> samples_per_experiment</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="367">
+<div class="cell-output cell-output-display" data-execution_count="826">
 <pre><code>true</code></pre>
 </div>
 </div>
@@ -483,58 +483,106 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 Number of max R stats: 136</code></pre>
 </div>
 </div>
+<div class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>r_stats_N <span class="op">|&gt;</span> histogram</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="828">
+<p><img src="simulation_files/figure-html/cell-20-output-1.svg" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>r_max_N <span class="op">|&gt;</span> histogram</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="829">
+<p><img src="simulation_files/figure-html/cell-21-output-1.svg" class="img-fluid"></p>
+</div>
+</div>
 </section>
 <section id="using-k" class="level3">
 <h3 class="anchored" data-anchor-id="using-k">Using K</h3>
-<div class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>sim_K <span class="op">=</span> <span class="fu">run_simulation</span>(samples, K)</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>sim_K <span class="op">=</span> <span class="fu">computeCIs!</span>(sim_K, <span class="fl">0.05</span>, N)</span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>r_stats_K <span class="op">=</span> <span class="fu">get_all_rstats</span>(sim_K)</span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>r_stats_K <span class="op">|&gt;</span> histogram</span>
-<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a><span class="fu">get_all_rmax</span>(sim_K) <span class="op">|&gt;</span> histogram</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="369">
-<p><img src="simulation_files/figure-html/cell-20-output-1.svg" class="img-fluid"></p>
+<div class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>sim_K <span class="op">=</span> <span class="fu">run_simulation</span>(samples, K)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>sim_K <span class="op">=</span> <span class="fu">computeCIs!</span>(sim_K, <span class="fl">0.05</span>, N)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>r_stats_K <span class="op">=</span> <span class="fu">get_all_rstats</span>(sim_K)</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>max_rstats_K <span class="op">=</span> <span class="fu">get_all_rmax</span>(sim_K) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="830">
+<pre><code>136-element Vector{Any}:
+ 2.983677617609461
+ 2.798723227512051
+ 3.0559602484752553
+ 2.545507992431065
+ 2.530349921753743
+ 3.409981380785356
+ 2.5541938326062468
+ 3.0262634312994483
+ 2.5188857160632296
+ 2.6210012597557957
+ 3.008450779468533
+ 2.9143618240813853
+ 2.84718055597793
+ ⋮
+ 2.974610199673494
+ 2.586236678001949
+ 2.501756624037332
+ 2.5222537899837114
+ 2.6644440134185876
+ 2.9312633285128467
+ 2.732075535391144
+ 2.529270605103277
+ 2.7056124173796166
+ 2.8143585973412546
+ 2.573873513397341
+ 2.622022860988149</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>r_stats_K <span class="op">|&gt;</span> histogram</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="831">
+<p><img src="simulation_files/figure-html/cell-23-output-1.svg" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>max_rstats_K <span class="op">|&gt;</span> histogram</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="832">
+<p><img src="simulation_files/figure-html/cell-24-output-1.svg" class="img-fluid"></p>
 </div>
 </div>
 </section>
 <section id="using-b" class="level3">
 <h3 class="anchored" data-anchor-id="using-b">Using B</h3>
-<div class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>sim_B <span class="op">=</span> <span class="fu">run_simulation</span>(samples, B)</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>sim_B <span class="op">=</span> <span class="fu">computeCIs!</span>(sim_B, <span class="fl">0.05</span>, N)</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>r_stats_B <span class="op">=</span> <span class="fu">get_all_rstats</span>(sim_B)</span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>r_stats_B <span class="op">|&gt;</span> histogram</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="370">
-<p><img src="simulation_files/figure-html/cell-21-output-1.svg" class="img-fluid"></p>
+<div class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>sim_B <span class="op">=</span> <span class="fu">run_simulation</span>(samples, B)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>sim_B <span class="op">=</span> <span class="fu">computeCIs!</span>(sim_B, <span class="fl">0.05</span>, N)</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>r_stats_B <span class="op">=</span> <span class="fu">get_all_rstats</span>(sim_B)</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>r_stats_B <span class="op">|&gt;</span> histogram</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="833">
+<p><img src="simulation_files/figure-html/cell-25-output-1.svg" class="img-fluid"></p>
 </div>
 </div>
-<div class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># for (k,v) in sim_N</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="co">#     println(k)</span></span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="co">#     println("\t", v["low"], " ", v["obs"], " ", v["high"])</span></span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="co">#     println("\t", v["d"])</span></span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="co"># end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># for (k,v) in sim_N</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="co">#     println(k)</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="co">#     println("\t", v["low"], " ", v["obs"], " ", v["high"])</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="co">#     println("\t", v["d"])</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="co"># end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># for (k,v) in sim_B</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="co">#     println(k)</span></span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="co">#     println("\t", v["low"], " ", v["obs"], " ", v["high"])</span></span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="co">#     println("\t", v["d"])</span></span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="co"># end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># for (k,v) in sim_B</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="co">#     println(k)</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="co">#     println("\t", v["low"], " ", v["obs"], " ", v["high"])</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="co">#     println("\t", v["d"])</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a><span class="co"># end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="23">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># for (k,v) in sim_K</span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="co">#     println(k)</span></span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="co">#     println("\t", v["low"], " ", v["obs"], " ", v["high"])</span></span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="co">#     println("\t", v["d"])</span></span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="co"># end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># for (k,v) in sim_K</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="co">#     println(k)</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="co">#     println("\t", v["low"], " ", v["obs"], " ", v["high"])</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="co">#     println("\t", v["d"])</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="co"># end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>

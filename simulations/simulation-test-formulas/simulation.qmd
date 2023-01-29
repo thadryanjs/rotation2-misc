@@ -353,6 +353,14 @@ println("Number of R stats: ", length(r_stats_N))
 println("Number of max R stats: ", length(r_max_N))
 ```
 
+```{julia}
+r_stats_N |> histogram
+```
+
+```{julia}
+r_max_N |> histogram
+```
+
 ### Using K
 
 ```{julia}
@@ -363,14 +371,19 @@ sim_K = computeCIs!(sim_K, 0.05, N)
 
 r_stats_K = get_all_rstats(sim_K)
 
-r_stats_K |> histogram
-
-get_all_rmax(sim_K) |> histogram
+max_rstats_K = get_all_rmax(sim_K) 
 ```
 
+```{julia}
+r_stats_K |> histogram
+```
+
+```{julia}
+
+max_rstats_K |> histogram
+```
 
 ### Using B
-
 
 ```{julia}
 
@@ -380,7 +393,16 @@ sim_B = computeCIs!(sim_B, 0.05, N)
 
 r_stats_B = get_all_rstats(sim_B)
 
+max_rstats_B = get_all_rmax(sim_B)
+```
+
+```{julia}
 r_stats_B |> histogram
+```
+
+```{julia}
+
+max_rstats_B |> histogram
 ```
 
 
