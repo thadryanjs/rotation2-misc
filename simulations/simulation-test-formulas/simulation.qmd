@@ -364,6 +364,8 @@ sim_K = computeCIs!(sim_K, 0.05, N)
 r_stats_K = get_all_rstats(sim_K)
 
 r_stats_K |> histogram
+
+get_all_rmax(sim_K) |> histogram
 ```
 
 
