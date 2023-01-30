@@ -31,6 +31,7 @@ using Plots
 using PlotThemes; # theme(:dracula)
 using DataFrames
 using CSV
+using Pkg
 ```
 
 ## Parameters
@@ -46,9 +47,9 @@ B = 100
 # observations per batch
 K = 1000
 # number of samples
-samples_per_experiment = 17
+S = 17
 # transparently display what we're using 
-println(samples_per_experiment, " samples per population")
+println(S, " samples per population")
 println(N, " observations per sample (N)")
 println(B, " batches per subpopulation/bootstrap (B)")
 println(K, " observations per batch (K)")
@@ -315,9 +316,13 @@ function computeCIs!(o, alpha, N)
 end
 ```
 
+### get_all_rstats()
+
+A convenience function to get all the $R$ stats (not $R_{max}$ s) in an experiment.
 
 ```{julia}
 
+### get all the r stats in an experiment
 function get_all_rstats(o)
     all_r_stats = []
     for(k,v) in o
@@ -328,8 +333,15 @@ function get_all_rstats(o)
     end
     all_r_stats
 end
+```
 
+### get_all_rmax()
 
+A convenience function to get all the $R_{max}$ values in an experiment.
+
+```{julia}
+
+### get all the r max values in an experiment
 function get_all_rmax(o)
     all_r_maxes = []
     for (k,v) in o
@@ -337,40 +349,40 @@ function get_all_rmax(o)
     end
     all_r_maxes
 end
-
-function get_all_d(o)
-    all_d = []
-    for (k,v) in o
-        push!(all_d, v["d"])
-    end
-    all_d[1]
-end
 ```
+
+### get_d()
+
+Gets the $d$ of an experiment. Because it's stored multiple times, it's inefficient but not so much it matters.
 
 ```{julia}
 
-samples = []
-for i in 1:samples_per_experiment
-    s = generate_sample(2, 0.5, N)
-    sr = get_batch_info(s, string("sample", i), K)
-    push!(samples, sr)
+function get_d(o)
+    [v["d"] for (k,v) in o][1]
 end
 
-samples |> length == samples_per_experiment
 ```
 
+### describe_experiment()
+
+This function shows numerical and visual results of interest from the experiment passed to it. It prints metrics and returns graphs.
+
 ```{julia}
+
 function describe_experiment(sim)
 
+    # get the r stats
     r_stats = get_all_rstats(sim)
     r_max = get_all_rmax(sim)
 
-    println("d: ", get_all_d(sim))
+    # print some QC metrics of interest
+    println("d: ", get_d(sim))
     println("Number of R stats: ", length(r_stats))
     println("Number of max R stats: ", length(r_max))
     println("17*8*B: ", 17 * 8 * B)
-    println("(K(K-1))/2: ",  ( K*(K-1) /2 ) )
+    println("( (S-1)/2 * B ): ",  ( S * (S-1) /2 ) * B )
 
+    # visualize the r stats
     r_hist = histogram(r_stats, title = "Distribution of Rs") 
     r_max_hist = histogram(r_max, title = "Distribution of max(R)s")
 
@@ -379,6 +391,22 @@ end
 ```
 
 ## The experiment
+
+```{julia}
+
+samples = []
+for i in 1:S
+    # make a sample
+    s = generate_sample(2, 0.5, N)
+    # get a report on that sample
+    sample_info = get_batch_info(s, string("sample", i), K)
+    push!(samples, sample_info)
+end
+
+# exit if there is disagreement between the number
+# of samples and the desired amount
+@assert samples |> length == S
+```
 
 ### Using $N$
 
@@ -411,41 +439,4 @@ sim_B = run_simulation(samples, B)
 sim_B = computeCIs!(sim_B, 0.05, N)
 
 describe_experiment(sim_B)
-```
-
-# TODO
-    -  Get one R stat per test (largest j>j') question
-
-```{julia}
-
-n = 1000
-
-ts = []
-
-for i in 1:1000
-    
-    s1 = generate_sample(0.0, 0.25, n)
-    s2 = generate_sample(0.0, 0.25, n)
-    
-    m1 = mean(s1)
-    m2 = mean(s2)
-
-    sd1 = std(s1)
-    sd2 = std(s2)
-
-    se = standard_error(sd1, sd2, n)
-
-    t = (m1-m2)/se
-
-    push!(ts, t)
-
-end
-
-histogram(ts)
-```
-
-
-
-```{julia}
-
 ```
