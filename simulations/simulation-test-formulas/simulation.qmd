@@ -1,14 +1,10 @@
+---
+toc: true
+---
 
-```{julia}
+## Goal
 
-using Random
-using Distributions
-using HypothesisTests
-using Plots
-using PlotThemes; # theme(:dracula)
-using DataFrames
-using CSV
-```
+To evaluate three different methods for calculating standard error to confirm the correct one for this bootstrap context. Specifically, we will asses weather to use $N$, $K$, or $B$ as defined below.
 
 ## Definitions
 
@@ -26,6 +22,18 @@ using CSV
  - $d$:= $1-\alpha$ quantile of a vector of $R$s.
  - $Z$:= $\in [N,B,K]$, factor to test the use of in the function.
 
+```{julia}
+
+using Random
+using Distributions
+using HypothesisTests
+using Plots
+using PlotThemes; # theme(:dracula)
+using DataFrames
+using CSV
+```
+
+## Parameters
 
 ```{julia}
 
@@ -37,10 +45,9 @@ N = 100000
 B = 100
 # observations per batch
 K = 1000
-
 # number of samples
 samples_per_experiment = 17
-
+# transparently display what we're using 
 println(samples_per_experiment, " samples per population")
 println(N, " observations per sample (N)")
 println(B, " batches per subpopulation/bootstrap (B)")
@@ -83,7 +90,6 @@ end
     
 # Compute the root statistic
 function calc_root_stat(m1, m1b, m2, m2b, se)
-    # abs( ( (m1b - m2b) - (m1 - m2) ) /se )
     ( (m1b - m2b) - (m1 - m2) ) / se 
 end
 ```
@@ -95,19 +101,22 @@ We will write a function to generate a sample.
 
 ```{julia}
  
-# create a sample of log-normal data
+# create a sample of normal data
 generate_sample(mu, sd, N) = rand(Normal(mu, sd), N)
 
-# a test sample
+# test samples to test/demonstrate the functions on
 samples = [generate_sample(2, 0.5, N) for i in 1:2]
 
+# make sure the same looks as it should
 histogram(samples[1])
 ```
 
 
-I will now write a separate function to get the information about sample needed to make a comparison.
+I will now write a separate function to get the information about sample needed to make a comparison to another sample.
 
-### Getting batch info
+### get_batch_info()
+
+This function takes a sample in the form of a vector, and gets bootstrapped samples by dividing the vector into $B$ batches of $K$. It then gets the $\theta$ and $\sigma$ of those batches and thus returns vectors of $B$ $\theta_b$s and $\sigma_b$s. It also gets the sample $\theta$ and $\sigma$, which the bootstrapped values will be compared against. It also names the sample so that any given sample can be looked up again if needed. It returns a dictionary.
 
 ```{julia}
 
@@ -149,15 +158,29 @@ end
 sample1 = get_batch_info(samples[1], "sample1", K)
 ```
 
-
-
 Now we have a dictionary containing the information about a samples we need to compare it to another. We will get another sample to compare it to.
 
 ```{julia}
 sample2 = get_batch_info(samples[2], "sample2", K)
 ```
 
-### Pairwise comparison
+### pairwise_comparison()
+
+This function makes the pairwise comparisons between samples given two samples, it iterates through their bootstrapped $\theta$ s and $\sigma$ s. Thus, it will make $B$ comparisons - the $\theta_s$ against every $\theta_b$, ie for $B=10$:
+
+ - $\theta_s \space$ vs
+    - $\theta_{b1}$
+    - $\theta_{b2}$
+    - $\theta_{b3}$
+    - $\theta_{b4}$
+    - $\theta_{b5}$
+    - $\theta_{b6}$
+    - $\theta_{b7}$
+    - $\theta_{b8}$
+    - $\theta_{b9}$
+    - $\theta_{b10}$
+
+The $Z$ is where the experiment takes place. This value is passed to the standard error function for use as the denominator. We will asses the distribution of the test statistic when different values for $Z$ are used.
 
 ```{julia}
 
@@ -181,7 +204,7 @@ function pairwise_comparison(sample1, sample2, Z)
     for i in 1:B
         # get the standard error using the current batch sd
         se = standard_error(s1_sd_boots[i], s2_sd_boots[i], Z)
-        
+        # pass the sample thetas to compare to this particular bootstrap value
         R = calc_root_stat(s1_theta, s1_theta_boots[i],
                             s2_theta, s2_theta_boots[i], se)
         push!(R_stats, R)
@@ -190,28 +213,38 @@ function pairwise_comparison(sample1, sample2, Z)
 end
 ```
 
-## The simulation
+### run_simulation()
+
+This function actually runs the simulation on a group of samples. It simples takes a list of samples and the $Z$ that we're investigating to pass to the `pairwise_comparison()` function. It returns a dict of information to be passed onto the next function. The key new information it returns is a vector of root statistics, in particular noting the maximum.
 
 ```{julia}
 
+### runs pairwise_comparison on a list of samples, skipping redundant comparisons,
 function run_simulation(samples, Z)
 
+    # we will make a string describing the comparison we're doing so
+    # we can check for redundancies
     comparison = []
 
+    # info we'll return
     r_stats_dict = Dict()
 
+    # for every sample...
     for i in 1:length(samples)
+        # for every sample...
         for j in 1:length(samples)
+            # don't compare 1 to 1
             if i != j
 
                 # note the comparison for the record
                 c = string(i, "_vs_", j)
-
+                # add the comparison we just made it
                 push!(comparison, c)
                 
-                # don't compare 2-1 if we've done 1-2
+                # check for the reverse comparison - don't compare 2-1 if we've
+                # done 1-2 ie, don't compare i to j if we've compared j to i
                 if string(j, "_vs_", i) in comparison
-                    continue
+                    continue # skip this iteration
                 end
 
                 # unpack what we'll need
@@ -224,12 +257,15 @@ function run_simulation(samples, Z)
                 sd1 = s1["sd"]
                 sd2 = s2["sd"]
 
-                # dev: inefficient but usable for this quick refactor
-                # return the r stat and the other things we will need
+                ## dev: inefficient but usable for this quick refactor
+                ## return the r stat and the other things we will need
+                # make the pairwise comparisons of all the sample means
+                # against all of the bootstrap/batch means
                 r_stats = pairwise_comparison(s1, s2, Z)
                 r_stats_dict[c] = Dict(
                     "max_r_stat" => abs(maximum(r_stats)),
                     "r_stats_vector" => r_stats,
+                    # we will need these again later
                     "m1" => m1,
                     "m2" => m2,
                     "sd1" => sd1,
@@ -243,25 +279,32 @@ function run_simulation(samples, Z)
 end
 ```
 
-What about the confidence intervals for each comparison in this simulation?
+### computeCIs!()
+
+This function takes the results of `run_simulation()` and computes the confidence intervals for each comparison. It just adds on to the object it received. These keeps the `run_simulation()` function a little cleaner.
 
 ```{julia}
 
 # this takes the comparison records and adds
 function computeCIs!(o, alpha, N)
 
+    # get a vector of all the absolute value of max r stats
     r_stats = [v["max_r_stat"] for (k,v) in o]
     
+    # for each comparison
     for (k,v) in o
         
+        # note the value we need
         m1 = v["m1"]
         m2 = v["m2"]
         sd1 = v["sd1"]
         sd2 = v["sd2"]
 
+        # compute d and the sample (non-bootstrap) standard error
         d = quantile(r_stats, (1-alpha))
         se = standard_error(sd1, sd2, N)
 
+        # add the new information to the record we have
         v["d"] = d
         v["low"] = round( (m1 - m2) - (d * se), digits = 5) 
         v["obs"] = round( (m1 - m2), digits = 5)
@@ -272,13 +315,6 @@ function computeCIs!(o, alpha, N)
 end
 ```
 
-```{julia}
-
-# sample1 = get_batch_info(generate_sample(2, 0.5, N), "sample1", K)
-# sample2 = get_batch_info(generate_sample(2, 0.5, N), "sample2", K);
-# experiment = run_simulation([sample1, sample2], B)
-# experiment = computeCIs!(experiment, 0.05, N)
-```
 
 ```{julia}
 
@@ -342,7 +378,9 @@ function describe_experiment(sim)
 end
 ```
 
-### Using N
+## The experiment
+
+### Using $N$
 
 ```{julia}
 
@@ -353,7 +391,7 @@ sim_N = computeCIs!(sim_N, 0.05, N)
 describe_experiment(sim_N)
 ```
 
-### Using K
+### Using $K$
 
 ```{julia}
 
@@ -364,7 +402,7 @@ sim_K = computeCIs!(sim_K, 0.05, N)
 describe_experiment(sim_K)
 ```
 
-### Using B
+### Using $B$
 
 ```{julia}
 
